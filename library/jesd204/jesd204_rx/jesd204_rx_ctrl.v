@@ -46,7 +46,8 @@
 
 module jesd204_rx_ctrl #(
   parameter NUM_LANES = 1,
-  parameter NUM_LINKS = 1
+  parameter NUM_LINKS = 1,
+  parameter ENABLE_FRAME_ALIGN_ERR_RESET = 0
 ) (
   input clk,
   input reset,
@@ -55,8 +56,8 @@ module jesd204_rx_ctrl #(
   input [NUM_LINKS-1:0] cfg_links_disable,
 
   input phy_ready,
-
   output phy_en_char_align,
+
 
   output [NUM_LANES-1:0] cgs_reset,
   input [NUM_LANES-1:0] cgs_ready,
@@ -64,6 +65,7 @@ module jesd204_rx_ctrl #(
   output [NUM_LANES-1:0] ifs_reset,
 
   input lmfc_edge,
+  input [NUM_LANES-1:0] frame_align_err_thresh_met,
 
   output [NUM_LINKS-1:0] sync,
   output reg latency_monitor_reset,
@@ -151,7 +153,9 @@ always @(*) begin
   STATE_WAIT_FOR_PHY: state_good <= phy_ready;
   STATE_CGS: state_good <= &(cgs_ready | cfg_lanes_disable);
   STATE_DEGLITCH: state_good <= deglitch_counter == 'h00;
-  STATE_SYNCHRONIZED: state_good <= 1'b1;
+  STATE_SYNCHRONIZED: state_good <= ENABLE_FRAME_ALIGN_ERR_RESET ?
+                                    &(~frame_align_err_thresh_met | cfg_lanes_disable) :
+                                    1'b1;
   default: state_good <= 1'b0;
   endcase
 end
@@ -185,9 +189,18 @@ always @(posedge clk) begin
   if (reset == 1'b1) begin
     state <= STATE_RESET;
   end else begin
-    if (good_counter == 'h7) begin
-      state <= next_state;
-    end
+    case (state)
+      STATE_SYNCHRONIZED:
+        begin
+          state <= next_state;
+        end
+      default:
+        begin
+          if (good_counter == 'h7) begin
+            state <= next_state;
+          end
+        end
+    endcase
   end
 end
 
