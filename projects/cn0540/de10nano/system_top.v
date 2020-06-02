@@ -134,6 +134,16 @@ module system_top (
   wire    [63:0]   gpio_i;
   wire    [63:0]   gpio_o;
 
+  wire             i2c1_scl;
+  wire             i2c1_scl_oe;
+  wire             i2c1_sda;
+  wire             i2c1_sda_oe;
+
+  wire             i2c0_out_data;
+  wire             i2c0_sda;
+  wire             i2c0_out_clk;
+  wire             i2c0_scl_in_clk;
+
   // instantiations
 
   assign gpio_i[63:41] = gpio_o[63:41];
@@ -155,13 +165,29 @@ module system_top (
 
   // IO Buffers for I2C
 
-  wire i2c_scl_out;
-  wire i2c_scl_in;
-  wire i2c_sda_in;
-  wire i2c_sda_oe;
+  ALT_IOBUF scl_iobuf (
+    .i(1'b0),
+    .oe(i2c1_scl_oe),
+    .o(i2c1_scl),
+    .io(i2c_scl));
 
-  ALT_IOBUF scl_iobuf (.i(1'b0), .oe(i2c_scl_out), .o(i2c_scl_in), .io(i2c_scl));
-  ALT_IOBUF sda_iobuf (.i(1'b0), .oe(i2c_sda_oe), .o(i2c_sda_in), .io(i2c_sda));
+  ALT_IOBUF sda_iobuf (
+    .i(1'b0),
+    .oe(i2c1_sda_oe),
+    .o(i2c1_sda),
+    .io(i2c_sda));
+
+  ALT_IOBUF scl_video_iobuf (
+    .i(1'b0),
+    .oe(i2c0_out_clk),
+    .o(i2c0_scl_in_clk),
+    .io(hdmi_i2c_scl));
+
+  ALT_IOBUF sda_video_iobuf (
+    .i(1'b0),
+    .oe(i2c0_out_data),
+    .o(i2c0_sda),
+    .io(hdmi_i2c_sda));
 
   system_bd i_system_bd (
     .sys_clk_clk (sys_clk),
