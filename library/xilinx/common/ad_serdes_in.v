@@ -218,15 +218,17 @@ module ad_serdes_in #(
 
   generate if (FPGA_TECHNOLOGY == ULTRASCALE || FPGA_TECHNOLOGY == ULTRASCALE_PLUS) begin
 
-    wire   [(DATA_WIDTH-1):0]      div_dld;
 
     for (l_inst = 0; l_inst <= (DATA_WIDTH-1); l_inst = l_inst + 1) begin: g_data
+
+    wire   div_dld;
+    reg [4:0] vtc_cnt = {5{1'b1}};
 
     sync_event  sync_load(
       .in_clk (up_clk),
       .in_event (up_dld[l_inst]),
       .out_clk (div_clk),
-      .out_event (div_dld[l_inst])
+      .out_event (div_dld)
     );
 
     (* IODELAY_GROUP = IODELAY_GROUP *)
@@ -253,12 +255,24 @@ module ad_serdes_in #(
        .CLK (div_clk),                                     // 1-bit input: Clock input
        .CNTVALUEIN (up_dwdata[((DRP_WIDTH*l_inst)+DRP_WIDTH-1):(DRP_WIDTH*l_inst)]),   // 9-bit input: Counter value input
        .DATAIN (1'b0),                                     // 1-bit input: Data input from the logic
-       .EN_VTC (1'b1),                                     // 1-bit input: Keep delay constant over VT
+       .EN_VTC (en_vtc),                                     // 1-bit input: Keep delay constant over VT
        .IDATAIN (data_in_ibuf_s[l_inst]),                  // 1-bit input: Data input from the IOBUF
        .INC (1'b0),                                        // 1-bit input: Increment / Decrement tap delay input
-       .LOAD (div_dld[l_inst]),                             // 1-bit input: Load DELAY_VALUE input
+       .LOAD (ld_cnt),                             // 1-bit input: Load DELAY_VALUE input
        .RST (rst)                                          // 1-bit input: Asynchronous Reset to the DELAY_VALUE
     );
+
+
+    always @(posedge div_clk) begin
+      if (div_dld) begin
+        vtc_cnt <= 'h0;
+      end else if (~(&vtc_cnt)) begin
+        vtc_cnt <= vtc_cnt + 1;
+      end
+    end
+
+    assign en_vtc = &vtc_cnt;
+    assign ld_cnt = ~vtc_cnt[4] & (&vtc_cnt[3:0]);
 
     ISERDESE3 #(
        .DATA_WIDTH (8),            // Parallel data width (4,8)
