@@ -143,7 +143,7 @@ module axi_adrv9001_rx #(
 
   // channel width is 32 bits
 
-  assign adc_valid = adc_valid_out_i0;
+  assign adc_valid = adc_enable_i0 ? adc_valid_out_i0 : adc_valid_out_i1;
 
   // channel 0 (i)
 
