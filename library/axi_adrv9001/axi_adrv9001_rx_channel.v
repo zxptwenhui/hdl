@@ -194,6 +194,7 @@ module axi_adrv9001_rx_channel #(
     ) PN7_gen (
     .clk (adc_clk),
     .reset (adc_rst),
+    .clk_en (adc_valid_in_2d),
     .pn_init (adc_pn_oos_s),
     .pn_data_in (adc_data_in_2d),
     .pn_data_out (pn7_data)
@@ -207,6 +208,7 @@ module axi_adrv9001_rx_channel #(
     ) PN15_gen (
     .clk (adc_clk),
     .reset (adc_rst),
+    .clk_en (adc_valid_in_2d),
     .pn_init (adc_pn_oos_s),
     .pn_data_in (adc_data_in_2d),
     .pn_data_out (pn15_data)

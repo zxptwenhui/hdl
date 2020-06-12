@@ -136,6 +136,7 @@ module axi_adrv9001_tx_channel #(
     ) PN7_gen (
     .clk (dac_clk),
     .reset (dac_rst),
+    .clk_en (dac_data_in_req),
     .pn_init (1'b0),
     .pn_data_out (pn7_data)
   );
@@ -148,6 +149,7 @@ module axi_adrv9001_tx_channel #(
     ) PN15_gen (
     .clk (dac_clk),
     .reset (dac_rst),
+    .clk_en (dac_data_in_req),
     .pn_init (1'b0),
     .pn_data_out (pn15_data)
   );
@@ -157,8 +159,8 @@ module axi_adrv9001_tx_channel #(
   always @(posedge dac_clk) begin
     dac_enable <= (dac_data_sel_s == 4'h2) ? 1'b1 : 1'b0;
     case (dac_data_sel_s)
-      4'h5: dac_data_iq_out <= pn15_data;
-      4'h4: dac_data_iq_out <= pn7_data;
+      4'h7: dac_data_iq_out <= pn15_data;
+      4'h6: dac_data_iq_out <= pn7_data;
       4'h3: dac_data_iq_out <= 16'd0;
       4'h2: dac_data_iq_out <= dac_data_in;
       4'h1: dac_data_iq_out <= dac_pat_data_1_s;
