@@ -36,6 +36,7 @@ module ad_pngen #(
 ) (
   input           clk,
   input           reset,
+  input           clk_en,
 
   // Output stream
   output [DW-1:0] pn_data_out,  // MSB has the oldest value,
@@ -94,7 +95,7 @@ module ad_pngen #(
   always @(posedge clk) begin
     if (reset == 1'b1) begin
       pn_state <= pn_reset;
-    end else begin
+    end else if (clk_en) begin
       pn_state <= pn_full_state[PN_W-1 : 0];
     end
   end
