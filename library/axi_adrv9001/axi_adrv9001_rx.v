@@ -64,6 +64,15 @@ module axi_adrv9001_rx #(
   output                  adc_sdr_ddr_n,
   output                  adc_r1_mode,
 
+  // dac loopback interface
+  input                   dac_data_valid_A,
+  input       [ 15:0]     dac_data_i_A,
+  input       [ 15:0]     dac_data_q_A,
+
+  input                   dac_data_valid_B,
+  input       [ 15:0]     dac_data_i_B,
+  input       [ 15:0]     dac_data_q_B,
+
   // dma interface
   output                  adc_valid,
 
@@ -165,6 +174,8 @@ module axi_adrv9001_rx #(
     .adc_data_iq_in (adc_data_iq_q0_s),
     .adc_data_iq_out (adc_data_iq_i0_s),
     .adc_enable (adc_enable_i0),
+    .dac_valid_in (dac_data_valid_A),
+    .dac_data_in (dac_data_i_A),
     .up_adc_pn_err (up_adc_pn_err_s[0]),
     .up_adc_pn_oos (up_adc_pn_oos_s[0]),
     .up_adc_or (up_adc_or_s[0]),
@@ -200,6 +211,8 @@ module axi_adrv9001_rx #(
     .adc_data_iq_in (adc_data_iq_i0_s),
     .adc_data_iq_out (adc_data_iq_q0_s),
     .adc_enable (adc_enable_q0),
+    .dac_valid_in (dac_data_valid_A),
+    .dac_data_in (dac_data_q_A),
     .up_adc_pn_err (up_adc_pn_err_s[1]),
     .up_adc_pn_oos (up_adc_pn_oos_s[1]),
     .up_adc_or (up_adc_or_s[1]),
@@ -235,6 +248,8 @@ module axi_adrv9001_rx #(
     .adc_data_iq_in (adc_data_iq_q1_s),
     .adc_data_iq_out (adc_data_iq_i1_s),
     .adc_enable (adc_enable_i1),
+    .dac_valid_in (dac_data_valid_B),
+    .dac_data_in (dac_data_i_B),
     .up_adc_pn_err (up_adc_pn_err_s[2]),
     .up_adc_pn_oos (up_adc_pn_oos_s[2]),
     .up_adc_or (up_adc_or_s[2]),
@@ -270,6 +285,8 @@ module axi_adrv9001_rx #(
     .adc_data_iq_in (adc_data_iq_i1_s),
     .adc_data_iq_out (adc_data_iq_q1_s),
     .adc_enable (adc_enable_q1),
+    .dac_valid_in (dac_data_valid_B),
+    .dac_data_in (dac_data_q_B),
     .up_adc_pn_err (up_adc_pn_err_s[3]),
     .up_adc_pn_oos (up_adc_pn_oos_s[3]),
     .up_adc_or (up_adc_or_s[3]),

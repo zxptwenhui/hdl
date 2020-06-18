@@ -56,6 +56,9 @@ module axi_adrv9001_rx_channel #(
   output      [(DATA_WIDTH-1):0]  adc_data_iq_out,
   output                          adc_enable,
 
+  input                           dac_valid_in,
+  input       [(DATA_WIDTH-1):0]  dac_data_in,
+
   // channel interface
   output                  up_adc_pn_err,
   output                  up_adc_pn_oos,
@@ -99,12 +102,20 @@ module axi_adrv9001_rx_channel #(
   wire    [(DATA_WIDTH-1):0]      adc_data_pn;
   wire    [(DATA_WIDTH-1):0]      pn7_data;
   wire    [(DATA_WIDTH-1):0]      pn15_data;
+  wire    [ 3:0]                  adc_data_sel_s;
+  wire    [15:0]                  adc_data_in_s;
+  wire                            adc_valid_in_s;
 
 
   reg                             adc_valid_in_d = 'h0;
   reg                             adc_valid_in_2d = 'h0;
   reg     [(DATA_WIDTH-1):0]      adc_data_in_d = 'h0;
   reg     [(DATA_WIDTH-1):0]      adc_data_in_2d = 'h0;
+
+  reg                             dac_valid_in_d = 'h0;
+  reg                             dac_valid_in_2d = 'h0;
+  reg     [(DATA_WIDTH-1):0]      dac_data_in_d = 'h0;
+  reg     [(DATA_WIDTH-1):0]      dac_data_in_2d = 'h0;
 
   // variables
   genvar                          n;
@@ -116,19 +127,29 @@ module axi_adrv9001_rx_channel #(
     adc_data_in_d <= adc_data_in;
     adc_data_in_2d <= adc_data_in_d;
   end
+  always @(posedge adc_clk) begin
+    dac_valid_in_d <= dac_valid_in;
+    dac_valid_in_2d <= dac_valid_in_d;
+    dac_data_in_d <= dac_data_in;
+    dac_data_in_2d <= dac_data_in_d;
+  end
+
+
+  assign adc_data_in_s = (adc_data_sel_s == 4'h0) ? adc_data_in_2d : dac_data_in_2d;
+  assign adc_valid_in_s = (adc_data_sel_s == 4'h0) ? adc_valid_in_2d : dac_valid_in_2d;
 
   // iq correction inputs
 
   generate
   for (n = 0; n < NUM_OF_SAMPLES; n = n + 1) begin: g_datafmt
   if (DISABLE == 1 || DATAFORMAT_DISABLE == 1) begin
-  assign adc_dfmt_valid_s[n] = adc_valid_in_2d;
-  assign adc_dfmt_data_s[((16*n)+15):(16*n)] = adc_data_in_2d[((16*n)+15):(16*n)];
+  assign adc_dfmt_valid_s[n] = adc_valid_in_s;
+  assign adc_dfmt_data_s[((16*n)+15):(16*n)] = adc_data_in_s[((16*n)+15):(16*n)];
   end else begin
   ad_datafmt #(.DATA_WIDTH (16)) i_ad_datafmt (
     .clk (adc_clk),
-    .valid (adc_valid_in_2d),
-    .data (adc_data_in_2d[((16*n)+15):(16*n)]),
+    .valid (adc_valid_in_s),
+    .data (adc_data_in_s[((16*n)+15):(16*n)]),
     .valid_out (adc_dfmt_valid_s[n]),
     .data_out (adc_dfmt_data_s[((16*n)+15):(16*n)]),
     .dfmt_enable (adc_dfmt_enable_s),
@@ -194,9 +215,9 @@ module axi_adrv9001_rx_channel #(
     ) PN7_gen (
     .clk (adc_clk),
     .reset (adc_rst),
-    .clk_en (adc_valid_in_2d),
+    .clk_en (adc_valid_in_s),
     .pn_init (adc_pn_oos_s),
-    .pn_data_in (adc_data_in_2d),
+    .pn_data_in (adc_data_in_s),
     .pn_data_out (pn7_data)
   );
 
@@ -208,9 +229,9 @@ module axi_adrv9001_rx_channel #(
     ) PN15_gen (
     .clk (adc_clk),
     .reset (adc_rst),
-    .clk_en (adc_valid_in_2d),
+    .clk_en (adc_valid_in_s),
     .pn_init (adc_pn_oos_s),
-    .pn_data_in (adc_data_in_2d),
+    .pn_data_in (adc_data_in_s),
     .pn_data_out (pn15_data)
   );
 
@@ -221,8 +242,8 @@ module axi_adrv9001_rx_channel #(
     .DATA_WIDTH (DATA_WIDTH)
   ) i_pnmon (
     .adc_clk (adc_clk),
-    .adc_valid_in (adc_valid_in_2d),
-    .adc_data_in (adc_data_in_2d),
+    .adc_valid_in (adc_valid_in_s),
+    .adc_data_in (adc_data_in_s),
     .adc_data_pn (adc_data_pn),
     .adc_pn_oos (adc_pn_oos_s),
     .adc_pn_err (adc_pn_err_s)
@@ -249,7 +270,7 @@ module axi_adrv9001_rx_channel #(
     .adc_iqcor_coeff_1 (adc_iqcor_coeff_1_s),
     .adc_iqcor_coeff_2 (adc_iqcor_coeff_2_s),
     .adc_pnseq_sel (adc_pnseq_sel),
-    .adc_data_sel (),
+    .adc_data_sel (adc_data_sel_s),
     .adc_pn_err (adc_pn_err_s),
     .adc_pn_oos (adc_pn_oos_s),
     .adc_or (1'd0),

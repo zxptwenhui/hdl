@@ -263,6 +263,13 @@ module axi_ad9001_core #(
     .adc_sdr_ddr_n (rx1_sdr_ddr_n),
     .adc_r1_mode (rx1_r1_mode),
 
+    .dac_data_valid_A (tx1_data_valid_A),
+    .dac_data_i_A (tx1_data_i_A),
+    .dac_data_q_A (tx1_data_q_A),
+    .dac_data_valid_B (tx1_data_valid_B),
+    .dac_data_i_B (tx1_data_i_B),
+    .dac_data_q_B (tx1_data_q_B),
+
     .adc_valid (adc_1_valid),
 
     .adc_enable_i0 (adc_1_enable_i0),
@@ -313,6 +320,13 @@ module axi_ad9001_core #(
 
     .adc_single_lane (rx2_single_lane_loc),
     .adc_sdr_ddr_n (rx2_sdr_ddr_n_loc),
+
+    .dac_data_valid_A (tx2_data_valid_A),
+    .dac_data_i_A (tx2_data_i_A),
+    .dac_data_q_A (tx2_data_q_A),
+    .dac_data_valid_B (1'b0),
+    .dac_data_i_B (16'b0),
+    .dac_data_q_B (16'b0),
 
     .adc_valid (adc_2_valid),
 
