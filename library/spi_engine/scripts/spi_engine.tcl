@@ -1,4 +1,4 @@
-proc spi_engine_bd {{name "hier_spi_engine"} {data_width 32} {async_spi_clk 1} {num_cs 1} {num_sdi 1} {sdi_delay 2}} {
+proc spi_engine_create {{name "hier_spi_engine"} {data_width 32} {async_spi_clk 1} {num_cs 1} {num_sdi 1} {sdi_delay 2}} {
 
   create_bd_cell -type hier $name
   current_bd_instance /$name
@@ -6,6 +6,7 @@ proc spi_engine_bd {{name "hier_spi_engine"} {data_width 32} {async_spi_clk 1} {
   create_bd_pin -dir I -type clk spi_clk
   create_bd_pin -dir I -type clk clk
   create_bd_pin -dir I -type rst resetn
+  create_bd_pin -dir I trigger
   create_bd_pin -dir O irq
   create_bd_intf_pin -mode Master -vlnv analog.com:interface:spi_master_rtl:1.0 m_spi
   create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 M_AXIS_SAMPLE

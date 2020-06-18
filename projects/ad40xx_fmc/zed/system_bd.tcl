@@ -1,5 +1,4 @@
 
-source $ad_hdl_dir/library/spi_engine/scripts/spi_engine.tcl
 source $ad_hdl_dir/projects/common/zed/zed_system_bd.tcl
 
 # specify the spi reference clock frequency in MHz
@@ -13,15 +12,6 @@ set adc_resolution 20
 # NOTE: This rate can be set just in turbo mode -- if turbo mode is not used
 # the max rate should be 1.6 MSPS
 set adc_sampling_rate 1800000
-
-set data_width 32
-set async_spi_clk 1
-set num_cs 1
-set num_sdi 1
-set sdi_delay 2
-set hier_spi_engine spi_ad40xx
-
-spi_engine_bd $hier_spi_engine $data_width $async_spi_clk $num_cs $num_sdi $sdi_delay
 
 source ../common/ad40xx_bd.tcl
 

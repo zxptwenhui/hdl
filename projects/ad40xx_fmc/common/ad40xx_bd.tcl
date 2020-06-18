@@ -1,6 +1,16 @@
 
-create_bd_intf_port -mode Master -vlnv analog.com:interface:spi_master_rtl:1.0 ad40xx_spi
+source $ad_hdl_dir/library/spi_engine/scripts/spi_engine.tcl
 
+set data_width 32
+set async_spi_clk 1
+set num_cs 1
+set num_sdi 1
+set sdi_delay 2
+set hier_spi_engine spi_ad40xx
+
+spi_engine_create $hier_spi_engine $data_width $async_spi_clk $num_cs $num_sdi $sdi_delay
+
+create_bd_intf_port -mode Master -vlnv analog.com:interface:spi_master_rtl:1.0 ad40xx_spi
 
 # To support the 1.8MSPS (SCLK == 100 MHz), set the spi clock to 200 MHz
 #current_bd_instance /
@@ -13,23 +23,20 @@ set_property -dict [list \
 
 set spi_clk sys_ps7/FCLK_CLK2
 
-  ad_ip_instance util_pulse_gen trigger_gen
+ad_ip_instance util_pulse_gen trigger_gen
 
-  ## to setup the sample rate of the system change the PULSE_PERIOD value
-  ## the acutal sample rate will be PULSE_PERIOD * (1/sys_cpu_clk)
-  set sampling_cycle [expr int(ceil(double($spi_clk_ref_frequency * 1000000) / $adc_sampling_rate))]
-  ad_ip_parameter trigger_gen CONFIG.PULSE_PERIOD $sampling_cycle
-  ad_ip_parameter trigger_gen CONFIG.PULSE_WIDTH 1
+## to setup the sample rate of the system change the PULSE_PERIOD value
+## the acutal sample rate will be PULSE_PERIOD * (1/sys_cpu_clk)
+set sampling_cycle [expr int(ceil(double($spi_clk_ref_frequency * 1000000) / $adc_sampling_rate))]
+ad_ip_parameter trigger_gen CONFIG.PULSE_PERIOD $sampling_cycle
+ad_ip_parameter trigger_gen CONFIG.PULSE_WIDTH 1
 
-  ad_connect $spi_clk trigger_gen/clk
-  ad_connect $hier_spi_engine/axi_regmap/spi_resetn trigger_gen/rstn
-  ad_connect trigger_gen/load_config GND
-  ad_connect trigger_gen/pulse_width GND
-  ad_connect trigger_gen/pulse_period GND
-  ad_connect trigger_gen/pulse $hier_spi_engine/offload/trigger
-
-#  ad_connect resetn axi_regmap/s_axi_aresetn
-#  ad_connect irq axi_regmap/irq
+ad_connect $spi_clk trigger_gen/clk
+ad_connect $hier_spi_engine/axi_regmap/spi_resetn trigger_gen/rstn
+ad_connect trigger_gen/load_config GND
+ad_connect trigger_gen/pulse_width GND
+ad_connect trigger_gen/pulse_period GND
+ad_connect trigger_gen/pulse $hier_spi_engine/trigger
 
 # asynchronous SPI clock, to support higher SCLK
 
