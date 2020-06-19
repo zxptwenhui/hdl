@@ -217,7 +217,8 @@ module axi_adrv9001_if #(
     .delay_rst (delay_rx1_rst),
     .delay_locked (delay_rx1_locked),
 
-    .mssi_sync (mssi_sync)
+    .mssi_sync (mssi_sync),
+    .ssi_rst (adc_1_ssi_rst)
   );
 
   adrv9001_rx_link #(
@@ -274,7 +275,8 @@ module axi_adrv9001_if #(
     .delay_rst (delay_rx2_rst),
     .delay_locked (delay_rx2_locked),
 
-    .mssi_sync (mssi_sync)
+    .mssi_sync (mssi_sync),
+    .ssi_rst (adc_2_ssi_rst)
   );
 
   adrv9001_rx_link #(
@@ -321,6 +323,7 @@ module axi_adrv9001_if #(
 
    .rx_clk_div (adc_1_clk_div4),
    .rx_clk (adc_1_clk),
+   .rx_ssi_rst (adc_1_ssi_rst),
 
    .dac_rst (tx1_rst),
    .dac_clk_div8 (dac_1_clk_div8),
@@ -382,6 +385,7 @@ module axi_adrv9001_if #(
 
    .rx_clk_div (adc_2_clk_div4),
    .rx_clk (adc_2_clk),
+   .rx_ssi_rst (adc_2_ssi_rst),
 
    .dac_rst (tx2_rst),
    .dac_clk_div8 (dac_2_clk_div8),

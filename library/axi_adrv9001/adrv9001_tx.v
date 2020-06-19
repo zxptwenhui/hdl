@@ -61,6 +61,7 @@ module adrv9001_tx #(
 
   input                   rx_clk_div,
   input                   rx_clk,
+  input                   rx_ssi_rst,
 
   // internal resets and clocks
 
@@ -93,6 +94,7 @@ module adrv9001_tx #(
   wire [NUM_LANES-1:0] data_s5;
   wire [NUM_LANES-1:0] data_s6;
   wire [NUM_LANES-1:0] data_s7;
+  wire                 ssi_rst;
 
   ad_serdes_out #(
     .CMOS_LVDS_N (CMOS_LVDS_N),
@@ -101,7 +103,7 @@ module adrv9001_tx #(
     .SERDES_FACTOR(8),
     .FPGA_TECHNOLOGY (FPGA_TECHNOLOGY))
   i_serdes (
-    .rst (dac_rst),
+    .rst (dac_rst|ssi_rst),
     .clk (dac_fast_clk),
     .div_clk (dac_clk_div4),
     .loaden (1'b0),
@@ -188,6 +190,8 @@ module adrv9001_tx #(
         .I (tx_dclk_in_s),
         .O (dac_clk_div4));
 
+      assign ssi_rst = mssi_sync;
+
     end else begin
 
       reg mssi_sync_d = 1'b0;
@@ -219,6 +223,8 @@ module adrv9001_tx #(
          .I (tx_dclk_in_s)
       );
 
+      assign ssi_rst = mssi_sync_2d;
+
     end
 
 //    // sample clock
@@ -237,6 +243,7 @@ module adrv9001_tx #(
     assign dac_fast_clk = rx_clk;
     assign dac_clk_div4 = rx_clk_div;
     assign dac_clk_div8 = 1'b0;
+    assign ssi_rst = rx_ssi_rst;
 
   end
 

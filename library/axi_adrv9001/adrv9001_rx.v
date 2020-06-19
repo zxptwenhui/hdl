@@ -73,7 +73,8 @@ module adrv9001_rx #(
   input                   delay_rst,
   output                  delay_locked,
 
-  input                   mssi_sync
+  input                   mssi_sync,
+  output                  ssi_rst
 );
 
   // Use always DDR mode
@@ -110,7 +111,7 @@ module adrv9001_rx #(
     .DRP_WIDTH (DRP_WIDTH),
     .SERDES_FACTOR (8))
   i_serdes (
-    .rst (adc_rst),
+    .rst (adc_rst|ssi_rst),
     .clk (adc_clk_in),
     .div_clk (adc_clk_div4),
     .loaden (1'b0),
@@ -197,6 +198,8 @@ module adrv9001_rx #(
       .I (clk_in_s),
       .O (adc_clk_div4));
 
+    assign ssi_rst = mssi_sync;
+
   end else begin
 
     reg mssi_sync_d = 1'b0;
@@ -227,6 +230,8 @@ module adrv9001_rx #(
        .CLR (mssi_sync_2d),
        .I (clk_in_s)
     );
+
+    assign ssi_rst = mssi_sync_2d;
 
   end
 
