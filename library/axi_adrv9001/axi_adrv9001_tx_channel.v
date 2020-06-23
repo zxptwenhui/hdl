@@ -78,6 +78,7 @@ module axi_adrv9001_tx_channel #(
   // internal registers
 
   reg     [15:0]  dac_pat_data = 'd0;
+  reg     [15:0]  full_ramp_counter = 'd0;
 
   // internal signals
 
@@ -154,11 +155,23 @@ module axi_adrv9001_tx_channel #(
     .pn_data_out (pn15_data)
   );
 
+  // full ramp generator
+  always @(posedge dac_clk) begin
+    if (dac_data_sync) begin
+      full_ramp_counter <= 'h0;
+    end else if (dac_data_in_req) begin
+      full_ramp_counter <= full_ramp_counter + 16'd1;
+    end
+  end
+  assign nibble_counter = full_ramp_counter[3:0];
+
   // dac mux
 
   always @(posedge dac_clk) begin
     dac_enable <= (dac_data_sel_s == 4'h2) ? 1'b1 : 1'b0;
     case (dac_data_sel_s)
+      4'hB: dac_data_iq_out <= full_ramp_counter;           // full ramp
+      4'hA: dac_data_iq_out <= {4{full_ramp_counter[3:0]}}; // nibble ramp
       4'h7: dac_data_iq_out <= pn15_data;
       4'h6: dac_data_iq_out <= pn7_data;
       4'h3: dac_data_iq_out <= 16'd0;

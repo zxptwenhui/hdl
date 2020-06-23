@@ -106,6 +106,7 @@ module axi_adrv9001_rx_channel #(
   wire    [15:0]                  adc_data_in_s;
   wire                            adc_valid_in_s;
 
+  reg     [15:0]                  full_ramp_counter = 'd0;
 
   reg                             adc_valid_in_d = 'h0;
   reg                             adc_valid_in_2d = 'h0;
@@ -235,16 +236,30 @@ module axi_adrv9001_rx_channel #(
     .pn_data_out (pn15_data)
   );
 
+  // reference nibble ramp and full ramp generator
+  always @(posedge adc_clk) begin
+    if (adc_pn_oos_s) begin
+      full_ramp_counter <= adc_data_in_s + 16'd1;
+    end else if (adc_valid_in_s) begin
+      full_ramp_counter <= full_ramp_counter + 16'd1;
+    end
+  end
+
   assign adc_data_pn  = adc_pnseq_sel == 4'd4 ? pn7_data :
-                        adc_pnseq_sel == 4'd5 ? pn15_data : 'h0;
+                        adc_pnseq_sel == 4'd5 ? pn15_data :
+                        adc_pnseq_sel == 4'd10 ? {4{full_ramp_counter[3:0]}} :
+                        adc_pnseq_sel == 4'd11 ? full_ramp_counter : 'h0;
 
   ad_pnmon #(
-    .DATA_WIDTH (DATA_WIDTH)
+    .DATA_WIDTH (DATA_WIDTH),
+    .OOS_THRESHOLD (8),
+    .ALLOW_ZERO_MASKING(1)
   ) i_pnmon (
     .adc_clk (adc_clk),
     .adc_valid_in (adc_valid_in_s),
     .adc_data_in (adc_data_in_s),
     .adc_data_pn (adc_data_pn),
+    .adc_pattern_has_zero (adc_pnseq_sel[3]),
     .adc_pn_oos (adc_pn_oos_s),
     .adc_pn_err (adc_pn_err_s)
   );
