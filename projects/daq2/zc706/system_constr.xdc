@@ -59,3 +59,6 @@ create_clock -name rx_ref_clk   -period  2.00 [get_ports rx_ref_clk_p]
 create_clock -name tx_div_clk   -period  4.00 [get_pins i_system_wrapper/system_i/util_daq2_xcvr/inst/i_xch_0/i_gtxe2_channel/TXOUTCLK]
 create_clock -name rx_div_clk   -period  4.00 [get_pins i_system_wrapper/system_i/util_daq2_xcvr/inst/i_xch_0/i_gtxe2_channel/RXOUTCLK]
 
+
+# debug
+set_property  -dict {PACKAGE_PIN  AD18  IOSTANDARD LVCMOS25} [get_ports trigger_out]

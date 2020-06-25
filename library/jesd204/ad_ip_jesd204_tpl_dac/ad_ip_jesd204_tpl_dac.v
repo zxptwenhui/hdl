@@ -55,6 +55,8 @@ module ad_ip_jesd204_tpl_dac #(
   input [NUM_LANES*8*OCTETS_PER_BEAT-1:0] dac_ddata,
   input dac_dunf,
 
+  output dac_sync,
+
   // axi interface
 
   input s_axi_aclk,

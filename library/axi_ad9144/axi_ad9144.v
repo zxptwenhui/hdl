@@ -73,6 +73,8 @@ module axi_ad9144 #(
   input       [63:0]      dac_ddata_3,
   input                   dac_dunf,
 
+  output                  dac_sync,
+
   // axi interface
 
   input                   s_axi_aclk,
@@ -158,6 +160,8 @@ module axi_ad9144 #(
     .dac_valid (dac_valid_s),
     .dac_ddata (dac_ddata_s),
     .dac_dunf (dac_dunf),
+
+    .dac_sync (dac_sync),
 
     .s_axi_aclk (s_axi_aclk),
     .s_axi_aresetn (s_axi_aresetn),

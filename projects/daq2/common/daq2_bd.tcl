@@ -1,4 +1,6 @@
 
+create_bd_port -dir O trigger_out
+
 source $ad_hdl_dir/library/jesd204/scripts/jesd204.tcl
 
 set adc_fifo_name axi_ad9680_fifo
@@ -108,6 +110,7 @@ ad_connect  axi_ad9144_jesd/tx_data_tdata axi_ad9144_core/tx_data
 ad_connect  tx_dev_clk axi_ad9144_upack/clk
 ad_connect  axi_ad9144_jesd_rstgen/peripheral_reset axi_ad9144_upack/reset
 
+ad_connect trigger_out axi_ad9144_core/dac_sync
 
 ad_connect  axi_ad9144_core/dac_valid_0 axi_ad9144_upack/fifo_rd_en
 for {set i 0} {$i < 2} {incr i} {

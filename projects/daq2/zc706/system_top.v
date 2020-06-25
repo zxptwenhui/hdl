@@ -129,7 +129,10 @@ module system_top (
   output                  spi_csn_adc,
   output                  spi_clk,
   inout                   spi_sdio,
-  output                  spi_dir);
+  output                  spi_dir,
+
+  output                  trigger_out
+);
 
   // internal signals
 
@@ -334,7 +337,8 @@ module system_top (
     .tx_ref_clk_0 (tx_ref_clk),
     .tx_sync_0 (tx_sync),
     .tx_dev_clk (tx_dev_clk),
-    .tx_sysref_0 (tx_sysref));
+    .tx_sysref_0 (tx_sysref),
+    .trigger_out (trigger_out));
 
 endmodule
 
