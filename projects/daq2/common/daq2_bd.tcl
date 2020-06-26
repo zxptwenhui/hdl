@@ -92,6 +92,7 @@ ad_connect  $sys_cpu_clk util_daq2_xcvr/up_clk
 # reference clocks & resets
 
 create_bd_port -dir I tx_ref_clk_0
+create_bd_port -dir I tx_dev_clk
 create_bd_port -dir I rx_ref_clk_0
 
 ad_xcvrpll  tx_ref_clk_0 util_daq2_xcvr/qpll_ref_clk_*
@@ -102,9 +103,9 @@ ad_xcvrpll  axi_ad9680_xcvr/up_pll_rst util_daq2_xcvr/up_cpll_rst_*
 # connections (dac)
 
 ad_xcvrcon  util_daq2_xcvr axi_ad9144_xcvr axi_ad9144_jesd {0 2 3 1}
-ad_connect  util_daq2_xcvr/tx_out_clk_0 axi_ad9144_core/tx_clk
+ad_connect  tx_dev_clk axi_ad9144_core/tx_clk
 ad_connect  axi_ad9144_jesd/tx_data_tdata axi_ad9144_core/tx_data
-ad_connect  util_daq2_xcvr/tx_out_clk_0 axi_ad9144_upack/clk
+ad_connect  tx_dev_clk axi_ad9144_upack/clk
 ad_connect  axi_ad9144_jesd_rstgen/peripheral_reset axi_ad9144_upack/reset
 
 
@@ -114,7 +115,7 @@ for {set i 0} {$i < 2} {incr i} {
   ad_connect  axi_ad9144_core/dac_ddata_$i axi_ad9144_upack/fifo_rd_data_$i
 }
 
-ad_connect  util_daq2_xcvr/tx_out_clk_0 axi_ad9144_fifo/dac_clk
+ad_connect  tx_dev_clk axi_ad9144_fifo/dac_clk
 ad_connect  axi_ad9144_jesd_rstgen/peripheral_reset axi_ad9144_fifo/dac_rst
 
 # TODO: Add streaming AXI interface for DAC FIFO
@@ -198,3 +199,14 @@ ad_cpu_interrupt ps-13 mb-12 axi_ad9680_dma/irq
 
 ad_connect  axi_ad9144_fifo/bypass GND
 
+disconnect_bd_net /util_daq2_xcvr_tx_out_clk_0 [get_bd_pins axi_ad9144_jesd/device_clk] \
+                                               [get_bd_pins util_daq2_xcvr/tx_clk_3] \
+                                               [get_bd_pins util_daq2_xcvr/tx_clk_2] \
+                                               [get_bd_pins util_daq2_xcvr/tx_clk_1] \
+                                               [get_bd_pins util_daq2_xcvr/tx_clk_0]
+
+connect_bd_net [get_bd_ports tx_dev_clk] [get_bd_pins axi_ad9144_jesd/device_clk]
+connect_bd_net [get_bd_ports tx_dev_clk] [get_bd_pins util_daq2_xcvr/tx_clk_1]
+connect_bd_net [get_bd_ports tx_dev_clk] [get_bd_pins util_daq2_xcvr/tx_clk_0]
+connect_bd_net [get_bd_ports tx_dev_clk] [get_bd_pins util_daq2_xcvr/tx_clk_2]
+connect_bd_net [get_bd_ports tx_dev_clk] [get_bd_pins util_daq2_xcvr/tx_clk_3]

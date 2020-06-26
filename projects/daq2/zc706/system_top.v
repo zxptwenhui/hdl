@@ -152,6 +152,9 @@ module system_top (
   wire            tx_sysref;
   wire            tx_sync;
 
+  wire            tx_device_clk;
+  wire            tx_dev_clk;
+
   // spi
 
   assign spi_csn_adc = spi0_csn[2];
@@ -182,7 +185,13 @@ module system_top (
     .I (tx_ref_clk_p),
     .IB (tx_ref_clk_n),
     .O (tx_ref_clk),
-    .ODIV2 ());
+    .ODIV2 (tx_device_clk));
+
+  BUFG i_tx_device_clk (
+    .I (tx_device_clk),
+    .O (tx_dev_clk)
+  );
+
 
   IBUFDS i_ibufds_tx_sysref (
     .I (tx_sysref_p),
@@ -324,6 +333,7 @@ module system_top (
     .tx_data_3_p (tx_data_p[3]),
     .tx_ref_clk_0 (tx_ref_clk),
     .tx_sync_0 (tx_sync),
+    .tx_dev_clk (tx_dev_clk),
     .tx_sysref_0 (tx_sysref));
 
 endmodule
