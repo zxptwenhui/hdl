@@ -129,10 +129,10 @@ module system_top (
   output  [3:0] mxfe_tx_en0,
   output  [3:0] mxfe_tx_en1,
 
-  inout  [10:0] mxfe0_gpio,
-  inout  [10:0] mxfe1_gpio,
-  inout  [10:0] mxfe2_gpio,
-  inout  [10:0] mxfe3_gpio,
+  inout  [8:0] mxfe0_gpio,
+  inout  [8:0] mxfe1_gpio,
+  inout  [8:0] mxfe2_gpio,
+  inout  [8:0] mxfe3_gpio,
 
   input  ext_sync
 
@@ -177,23 +177,23 @@ module system_top (
   generate
   for(i=0;i<=3;i=i+1) begin : g_buffers
   IBUFDS i_ibufds_syncin (
-    .I (mxfe_syncout_p[i]),
-    .IB (mxfe_syncout_n[2*i+1]),
+    .I (mxfe_syncout_p[2*i+1]),
+    .IB (mxfe_syncout_n[i]),
     .O (tx_syncin[i]));
 
   OBUFDS i_obufds_syncout (
     .I (rx_syncout[i]),
-    .O (mxfe_syncin_p[i]),
-    .OB (mxfe_syncin_n[2*i+1]));
+    .O (mxfe_syncin_p[2*i+1]),
+    .OB (mxfe_syncin_n[i]));
 
   end
   endgenerate
 
   // Loopback SYNC0 
   assign mxfe_syncin_p[0] = mxfe_syncout_p[0];
-  assign mxfe_syncin_p[0] = mxfe_syncout_p[2];
-  assign mxfe_syncin_p[0] = mxfe_syncout_p[4];
-  assign mxfe_syncin_p[0] = mxfe_syncout_p[6];
+  assign mxfe_syncin_p[2] = mxfe_syncout_p[2];
+  assign mxfe_syncin_p[4] = mxfe_syncout_p[4];
+  assign mxfe_syncin_p[6] = mxfe_syncout_p[6];
 
 
 
@@ -236,7 +236,7 @@ module system_top (
     .IB (fpga_clk_m2c_n[2]),
     .O (fpga_clk_m2c_2));
 
-  BUFG_GT i_tx_device_clk (
+  BUFG i_tx_device_clk (
     .I (fpga_clk_m2c_2),
     .O (tx_device_clk)
   );
@@ -462,12 +462,12 @@ module system_top (
     .tx_data_14_p (c2m_p[7]),
     .tx_data_15_n (c2m_n[5]),
     .tx_data_15_p (c2m_p[5]),
-    .ref_clk_q0 (ref_clk[0]),
-    .ref_clk_q1 (ref_clk[0]),
+    .ref_clk_q0 (ref_clk),
+    .ref_clk_q1 (ref_clk),
     .ref_clk_q2 (ref_clk_replica),
     .ref_clk_q3 (ref_clk_replica),
     .rx_device_clk (rx_device_clk),
-    .tx_device_clk (tx_device_clk), 
+    .tx_device_clk (tx_device_clk),
     .rx_sync_0 (rx_syncout),
     .tx_sync_0 (tx_syncin),
     .rx_sysref_0 (sysref),
