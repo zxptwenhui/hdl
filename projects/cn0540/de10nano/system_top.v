@@ -102,6 +102,18 @@ module system_top (
   output  [  7:0]   gpio_bd_o,
   input   [  5:0]   gpio_bd_i,
 
+  // hdmi
+
+  output            hdmi_out_clk,
+  output            hdmi_vsync,
+  output            hdmi_hsync,
+  output            hdmi_data_e,
+  output  [ 23:0]   hdmi_data,
+
+  inout             hdmi_i2c_scl,
+  inout             hdmi_i2c_sda
+
+
   // cn0540
 
   inout            i2c_sda,
@@ -154,8 +166,26 @@ module system_top (
   wire i2c_sda_in;
   wire i2c_sda_oe;
 
+  wire i2c0_out_data;
+  wire i2c0_sda;
+  wire i2c0_out_clk;
+  wire i2c0_scl_in_clk;
+
   ALT_IOBUF scl_iobuf (.i(1'b0), .oe(i2c_scl_out), .o(i2c_scl_in), .io(i2c_scl));
   ALT_IOBUF sda_iobuf (.i(1'b0), .oe(i2c_sda_oe), .o(i2c_sda_in), .io(i2c_sda));
+
+  ALT_IOBUF scl_iobuf (
+    .i(1'b0),
+    .oe(i2c0_out_clk),
+    .o(i2c0_scl_in_clk),
+    .io(hdmi_i2c_scl));
+
+  ALT_IOBUF sda_iobuf (
+    .i(1'b0),
+    .oe(i2c0_out_data),
+    .o(i2c0_sda),
+    .io(hdmi_i2c_sda));
+
 
   system_bd i_system_bd (
     .sys_clk_clk (sys_clk),
@@ -177,6 +207,10 @@ module system_top (
     .sys_hps_memory_mem_dm (ddr3_dm),
     .sys_hps_memory_oct_rzqin (ddr3_rzq),
     .sys_rst_reset_n (sys_resetn),
+    .sys_hps_i2c0_out_data (i2c0_out_data),
+    .sys_hps_i2c0_sda (i2c0_sda),
+    .sys_hps_i2c0_clk_clk (i2c0_out_clk),
+    .sys_hps_i2c0_scl_in_clk (i2c0_scl_in_clk),
     .sys_hps_hps_io_hps_io_emac1_inst_TX_CLK (eth1_tx_clk),
     .sys_hps_hps_io_hps_io_emac1_inst_TXD0 (eth1_tx_d[0]),
     .sys_hps_hps_io_hps_io_emac1_inst_TXD1 (eth1_tx_d[1]),
@@ -227,7 +261,12 @@ module system_top (
     .cn0540_spi_sdi_sdi (cn0540_spi_miso),
     .cn0540_spi_cs_cs (cn0540_spi_cs),
     .cn0540_spi_sclk_clk (cn0540_spi_sclk),
-    .cn0540_spi_trigger_trigger (cn0540_drdy));
+    .cn0540_spi_trigger_trigger (cn0540_drdy),
+    .axi_hdmi_tx_0_hdmi_if_h_clk (hdmi_out_clk),
+    .axi_hdmi_tx_0_hdmi_if_h24_hsync (hdmi_hsync),
+    .axi_hdmi_tx_0_hdmi_if_h24_vsync (hdmi_vsync),
+    .axi_hdmi_tx_0_hdmi_if_h24_data_e (hdmi_data_e),
+    .axi_hdmi_tx_0_hdmi_if_h24_data (hdmi_data));
 
 endmodule
 
