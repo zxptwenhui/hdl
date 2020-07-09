@@ -424,7 +424,7 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
     }
     set m_interconnect_index $sys_mem_interconnect_index
     set m_interconnect_cell [get_bd_cells axi_mem_interconnect]
-    set m_addr_seg [get_bd_addr_segs -of_objects [get_bd_cells axi_ddr_cntrl]]
+    set m_addr_seg [get_bd_addr_segs -of_objects [get_bd_cells axi_ddr_cntrl] -filter "USAGE == memory"]
   }
 
   if {($p_sel eq "HP0") && ($sys_zynq == 1)} {
@@ -558,8 +558,8 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
     if {$p_intf_clock ne ""} {
       ad_connect $p_clk $p_intf_clock
     }
-
-    set mem_mapped [get_bd_addr_segs -of [get_bd_addr_spaces -of  [get_bd_intf_pins -filter {NAME=~ *DLMB*} -of [get_bd_cells /sys_mb]]] -filter {NAME=~ *DDR* || NAME=~ *ddr*}]
+    # Search a DDR segment that is at least 16MB
+    set mem_mapped [get_bd_addr_segs -of [get_bd_addr_spaces -of  [get_bd_intf_pins -filter {NAME=~ *DLMB*} -of [get_bd_cells /sys_mb]]] -regexp -filter {NAME=~ ".*ddr.*" && RANGE=~".*0{6}$"}]
 
     if {$mem_mapped eq ""} {
       assign_bd_address $m_addr_seg
@@ -582,8 +582,9 @@ proc ad_mem_hpx_interconnect {p_sel p_clk p_name} {
 #
 #  \param[p_address] - address offset of the IP register map
 #  \param[p_name] - name of the IP
+#  \param[p_intf_name] - name of the AXI MM Slave interface (optional)
 #
-proc ad_cpu_interconnect {p_address p_name} {
+proc ad_cpu_interconnect {p_address p_name {p_intf_name {}}} {
 
   global sys_zynq
   global sys_cpu_interconnect_index
@@ -634,7 +635,8 @@ proc ad_cpu_interconnect {p_address p_name} {
 
 
   set p_cell [get_bd_cells $p_name]
-  set p_intf [get_bd_intf_pins -filter "MODE == Slave && VLNV == xilinx.com:interface:aximm_rtl:1.0"\
+  set p_intf [get_bd_intf_pins -filter \
+    "MODE == Slave && VLNV == xilinx.com:interface:aximm_rtl:1.0 && NAME =~ *$p_intf_name*"\
     -of_objects $p_cell]
 
   set p_hier_cell $p_cell
@@ -724,7 +726,7 @@ proc ad_cpu_interconnect {p_address p_name} {
   }
   ad_connect axi_cpu_interconnect/${i_str}_AXI ${p_intf}
 
-  set p_seg [get_bd_addr_segs -of_objects $p_hier_cell]
+  set p_seg [get_bd_addr_segs -of [get_bd_addr_spaces -of [get_bd_intf_pins -filter "NAME=~ *${p_intf_name}*" -of $p_hier_cell]]]
   set p_index 0
   foreach p_seg_name $p_seg {
     if {$p_index == 0} {
