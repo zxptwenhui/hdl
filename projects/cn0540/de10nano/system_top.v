@@ -102,6 +102,18 @@ module system_top (
   output  [  7:0]   gpio_bd_o,
   input   [  5:0]   gpio_bd_i,
 
+  // hdmi
+
+  output            hdmi_out_clk,
+  output            hdmi_vsync,
+  output            hdmi_hsync,
+  output            hdmi_data_e,
+  output  [ 23:0]   hdmi_data,
+
+  inout             hdmi_i2c_scl,
+  inout             hdmi_i2c_sda,
+
+
   // cn0540
 
   inout            i2c_sda,
@@ -155,13 +167,40 @@ module system_top (
 
   // IO Buffers for I2C
 
-  wire i2c_scl_out;
-  wire i2c_scl_in;
-  wire i2c_sda_in;
-  wire i2c_sda_oe;
+  wire i2c1_scl;
+  wire i2c1_scl_oe;
+  wire i2c1_sda;
+  wire i2c1_sda_oe;
 
-  ALT_IOBUF scl_iobuf (.i(1'b0), .oe(i2c_scl_out), .o(i2c_scl_in), .io(i2c_scl));
-  ALT_IOBUF sda_iobuf (.i(1'b0), .oe(i2c_sda_oe), .o(i2c_sda_in), .io(i2c_sda));
+  wire i2c0_out_data;
+  wire i2c0_sda;
+  wire i2c0_out_clk;
+  wire i2c0_scl_in_clk;
+
+  ALT_IOBUF scl_iobuf (
+    .i(1'b0),
+    .oe(i2c1_scl_oe),
+    .o(i2c1_scl),
+    .io(i2c_scl));
+
+  ALT_IOBUF sda_iobuf (
+    .i(1'b0),
+    .oe(i2c1_sda_oe),
+    .o(i2c1_sda),
+    .io(i2c_sda));
+
+  ALT_IOBUF scl_video_iobuf (
+    .i(1'b0),
+    .oe(i2c0_out_clk),
+    .o(i2c0_scl_in_clk),
+    .io(hdmi_i2c_scl));
+
+  ALT_IOBUF sda_video_iobuf (
+    .i(1'b0),
+    .oe(i2c0_out_data),
+    .o(i2c0_sda),
+    .io(hdmi_i2c_sda));
+
 
   system_bd i_system_bd (
     .sys_clk_clk (sys_clk),
@@ -183,6 +222,10 @@ module system_top (
     .sys_hps_memory_mem_dm (ddr3_dm),
     .sys_hps_memory_oct_rzqin (ddr3_rzq),
     .sys_rst_reset_n (sys_resetn),
+    .sys_hps_i2c0_out_data (i2c0_out_data),
+    .sys_hps_i2c0_sda (i2c0_sda),
+    .sys_hps_i2c0_clk_clk (i2c0_out_clk),
+    .sys_hps_i2c0_scl_in_clk (i2c0_scl_in_clk),
     .sys_hps_hps_io_hps_io_emac1_inst_TX_CLK (eth1_tx_clk),
     .sys_hps_hps_io_hps_io_emac1_inst_TXD0 (eth1_tx_d[0]),
     .sys_hps_hps_io_hps_io_emac1_inst_TXD1 (eth1_tx_d[1]),
@@ -221,10 +264,10 @@ module system_top (
     .sys_hps_hps_io_hps_io_spim1_inst_MOSI (spim1_mosi),
     .sys_hps_hps_io_hps_io_spim1_inst_MISO (spim1_miso),
     .sys_hps_hps_io_hps_io_spim1_inst_SS0 (spim1_ss0),
-    .sys_hps_i2c0_sda (i2c_sda),
-    .sys_hps_i2c0_out_data (i2c_out_data),
-    .sys_hps_i2c0_clk_clk (i2c_out_clk),
-    .sys_hps_i2c0_scl_in_clk (i2c_scl),
+    .sys_hps_i2c1_sda (i2c1_sda),
+    .sys_hps_i2c1_out_data (i2c1_sda_oe),
+    .sys_hps_i2c1_clk_clk (i2c1_scl_oe),
+    .sys_hps_i2c1_scl_in_clk (i2c1_scl),
     .sys_gpio_bd_in_port (gpio_i[31:0]),
     .sys_gpio_bd_out_port (gpio_o[31:0]),
     .sys_gpio_in_export (gpio_i[63:32]),
@@ -241,7 +284,12 @@ module system_top (
     .ltc2308_spi_MISO (ltc2308_miso),
     .ltc2308_spi_MOSI (ltc2308_mosi),
     .ltc2308_spi_SCLK (ltc2308_sclk),
-    .ltc2308_spi_SS_n (ltc2308_cs));
+    .ltc2308_spi_SS_n (ltc2308_cs),
+    .axi_hdmi_tx_0_hdmi_if_h_clk (hdmi_out_clk),
+    .axi_hdmi_tx_0_hdmi_if_h24_hsync (hdmi_hsync),
+    .axi_hdmi_tx_0_hdmi_if_h24_vsync (hdmi_vsync),
+    .axi_hdmi_tx_0_hdmi_if_h24_data_e (hdmi_data_e),
+    .axi_hdmi_tx_0_hdmi_if_h24_data (hdmi_data));
 
 endmodule
 
