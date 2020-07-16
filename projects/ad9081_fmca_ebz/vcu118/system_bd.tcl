@@ -95,3 +95,6 @@ set_property -dict [list CONFIG.G_TEMPLATE_LIST {7} CONFIG.C_USE_FPU {2} CONFIG.
 
 # increase implemenation effort
 set_property strategy Performance_Explore [get_runs impl_1]
+
+# Run SPI CLK at 25 MHz
+set_property -dict [list CONFIG.C_SCK_RATIO {4}] [get_bd_cells axi_spi]
