@@ -93,3 +93,5 @@ connect_bd_net [get_bd_pins axi_ddr_cntrl/c0_ddr4_ui_clk] [get_bd_pins sys_ilmb_
 set_property -dict [list CONFIG.C_AREA_OPTIMIZED {2}] [get_bd_cells sys_mb]
 set_property -dict [list CONFIG.G_TEMPLATE_LIST {7} CONFIG.C_USE_FPU {2} CONFIG.C_FPU_EXCEPTION {1} CONFIG.C_ICACHE_VICTIMS {0} CONFIG.C_ICACHE_STREAMS {0} CONFIG.C_DCACHE_USE_WRITEBACK {1} CONFIG.C_DCACHE_VICTIMS {0} CONFIG.C_USE_BRANCH_TARGET_CACHE {1}] [get_bd_cells sys_mb]
 
+# increase implemenation effort
+set_property strategy Performance_Explore [get_runs impl_1]
