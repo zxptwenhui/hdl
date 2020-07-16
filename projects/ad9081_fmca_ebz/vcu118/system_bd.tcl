@@ -66,3 +66,30 @@ ad_cpu_interrupt ps-13 mb-5 axi_timer2/interrupt
 
 ad_cpu_interconnect 0x41D00000 axi_timer2
 
+# connect 300Mhz to MicroBlaze
+disconnect_bd_net /sys_cpu_clk [get_bd_pins sys_mb/Clk]
+connect_bd_net [get_bd_pins axi_ddr_cntrl/c0_ddr4_ui_clk] [get_bd_pins sys_mb/Clk]
+delete_bd_objs [get_bd_nets sys_rstgen_mb_reset]
+connect_bd_net [get_bd_pins axi_ddr_cntrl_rstgen/mb_reset] [get_bd_pins sys_mb/Reset]
+disconnect_bd_net /sys_cpu_resetn [get_bd_pins axi_cpu_interconnect/S00_ARESETN]
+connect_bd_net [get_bd_pins axi_ddr_cntrl_rstgen/peripheral_aresetn] [get_bd_pins axi_cpu_interconnect/S00_ARESETN]
+disconnect_bd_net /sys_cpu_clk [get_bd_pins axi_cpu_interconnect/S00_ACLK]
+connect_bd_net [get_bd_pins axi_ddr_cntrl/c0_ddr4_ui_clk] [get_bd_pins axi_cpu_interconnect/S00_ACLK]
+
+disconnect_bd_net /sys_rstgen_bus_struct_reset [get_bd_pins sys_rstgen/bus_struct_reset]
+connect_bd_net [get_bd_pins axi_ddr_cntrl_rstgen/bus_struct_reset] [get_bd_pins sys_dlmb/SYS_Rst]
+disconnect_bd_net /sys_cpu_clk [get_bd_pins sys_dlmb/LMB_Clk]
+disconnect_bd_net /sys_cpu_clk [get_bd_pins sys_ilmb/LMB_Clk]
+disconnect_bd_net /sys_cpu_clk [get_bd_pins sys_dlmb_cntlr/LMB_Clk]
+disconnect_bd_net /sys_cpu_clk [get_bd_pins sys_ilmb_cntlr/LMB_Clk]
+connect_bd_net [get_bd_pins axi_ddr_cntrl/c0_ddr4_ui_clk] [get_bd_pins sys_dlmb/LMB_Clk]
+connect_bd_net [get_bd_pins axi_ddr_cntrl/c0_ddr4_ui_clk] [get_bd_pins sys_ilmb/LMB_Clk]
+connect_bd_net [get_bd_pins axi_ddr_cntrl/c0_ddr4_ui_clk] [get_bd_pins sys_dlmb_cntlr/LMB_Clk]
+connect_bd_net [get_bd_pins axi_ddr_cntrl/c0_ddr4_ui_clk] [get_bd_pins sys_ilmb_cntlr/LMB_Clk]
+
+#set_property -dict [list CONFIG.NUM_CLKS {4}] [get_bd_cells axi_mem_interconnect]
+#connect_bd_net [get_bd_pins axi_mem_interconnect/aclk3] [get_bd_pins axi_ddr_cntrl/c0_ddr4_ui_clk]
+#
+set_property -dict [list CONFIG.C_AREA_OPTIMIZED {2}] [get_bd_cells sys_mb]
+set_property -dict [list CONFIG.G_TEMPLATE_LIST {7} CONFIG.C_USE_FPU {2} CONFIG.C_FPU_EXCEPTION {1} CONFIG.C_ICACHE_VICTIMS {0} CONFIG.C_ICACHE_STREAMS {0} CONFIG.C_DCACHE_USE_WRITEBACK {1} CONFIG.C_DCACHE_VICTIMS {0} CONFIG.C_USE_BRANCH_TARGET_CACHE {1}] [get_bd_cells sys_mb]
+
