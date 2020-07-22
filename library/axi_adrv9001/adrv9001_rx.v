@@ -112,7 +112,7 @@ module adrv9001_rx #(
     .SERDES_FACTOR (8))
   i_serdes (
     .rst (adc_rst|ssi_rst),
-    .clk (adc_clk_in),
+    .clk (adc_clk_in_fast),
     .div_clk (adc_clk_div4),
     .loaden (1'b0),
     .phase (8'b0),
@@ -219,6 +219,16 @@ module adrv9001_rx #(
        .I (clk_in_s)
     );
 
+    BUFGCE #(
+       .CE_TYPE ("SYNC"),
+       .IS_CE_INVERTED (1'b0),
+       .IS_I_INVERTED (1'b0)
+    ) i_clk_buf_fast (
+       .O (adc_clk_in_fast),
+       .CE (1'b1),
+       .I (adc_clk_in)
+    );
+
     BUFGCE_DIV #(
        .BUFGCE_DIVIDE (4),
        .IS_CE_INVERTED (1'b0),
@@ -228,7 +238,7 @@ module adrv9001_rx #(
        .O (adc_clk_div4),
        .CE (1'b1),
        .CLR (mssi_sync_2d),
-       .I (clk_in_s)
+       .I (adc_clk_in)
     );
 
     assign ssi_rst = mssi_sync_2d;
@@ -243,6 +253,6 @@ module adrv9001_rx #(
 //    .I (clk_in_s),
 //    .O (adc_clk_div8));
   assign adc_clk_div8 = 0;
-  assign adc_clk = adc_clk_in;
+  assign adc_clk = adc_clk_in_fast;
 
 endmodule
