@@ -218,6 +218,8 @@ module axi_adrv9001_if #(
     .delay_locked (delay_rx1_locked),
 
     .mssi_sync (mssi_sync),
+    .ssi_sync_out (rx_ssi_sync_out),
+    .ssi_sync_in (rx_ssi_sync_out),
     .ssi_rst (adc_1_ssi_rst)
   );
 
@@ -275,7 +277,9 @@ module axi_adrv9001_if #(
     .delay_rst (delay_rx2_rst),
     .delay_locked (delay_rx2_locked),
 
-    .mssi_sync (mssi_sync),
+    .mssi_sync (1'b0),
+    .ssi_sync_out (),
+    .ssi_sync_in (rx_ssi_sync_out),
     .ssi_rst (adc_2_ssi_rst)
   );
 
