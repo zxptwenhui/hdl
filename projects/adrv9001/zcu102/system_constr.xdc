@@ -79,21 +79,6 @@ set_property UNAVAILABLE_DURING_CALIBRATION TRUE [get_ports tx2_idata_in_p]
 #set_property USER_CLOCK_ROOT X3Y3 [get_nets -of [get_pins i_system_wrapper/system_i/axi_adrv9001/inst/i_if/i_tx_2_phy/i_dac_div_clk_rbuf/O]]
 
 
-#
-#  Common Tx and Rx clock, both use Rx clock
-#
-
-set_property CLOCK_DELAY_GROUP BALANCE_CLOCKS_1  [list \
-  [get_nets -of [get_pins i_system_wrapper/system_i/axi_adrv9001/inst/i_if/i_rx_1_phy/i_clk_buf/O]] \
-  [get_nets -of [get_pins i_system_wrapper/system_i/axi_adrv9001/inst/i_if/i_rx_1_phy/i_div_clk_buf/O]]]
-
-set_property USER_CLOCK_ROOT X3Y2 [get_nets -of [get_pins i_system_wrapper/system_i/axi_adrv9001/inst/i_if/i_rx_1_phy/i_div_clk_buf/O]]
-
-set_property CLOCK_DELAY_GROUP BALANCE_CLOCKS_2  [list \
-  [get_nets -of [get_pins i_system_wrapper/system_i/axi_adrv9001/inst/i_if/i_rx_2_phy/i_clk_buf/O]] \
-  [get_nets -of [get_pins i_system_wrapper/system_i/axi_adrv9001/inst/i_if/i_rx_2_phy/i_div_clk_buf/O]]]
-
-set_property USER_CLOCK_ROOT X3Y3 [get_nets -of [get_pins i_system_wrapper/system_i/axi_adrv9001/inst/i_if/i_rx_2_phy/i_div_clk_buf/O]]
 
 # Debug port (Proto header)
 set_property -dict {PACKAGE_PIN H13 IOSTANDARD LVCMOS33} [get_ports proto_hdr[0]]  ;# J3 24 L8P_HDGC_50_P

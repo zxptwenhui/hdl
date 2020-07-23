@@ -131,8 +131,6 @@ module system_top (
   // internal registers
   reg         [  2:0] mcs_sync_m = 'd0;
   reg                 dev_mcs_fpga_in = 1'b0;
-  reg         [  2:0] mssi_sync_m = 'd0;
-  reg                 mssi_sync = 1'b0;
 
   // internal signals
   wire        [94:0]      gpio_i;
@@ -169,10 +167,7 @@ module system_top (
 
   // multi-ssi synchronization
   //
-   always @(posedge fpga_ref_clk) begin
-    mssi_sync_m <= {mssi_sync_m[1:0], gpio_o[54]};
-    mssi_sync <= mssi_sync_m[2] & ~mssi_sync_m[1];
-  end
+  assign mssi_sync = gpio_o[54];
 
   assign {vadj_test_2,vadj_test_1} = 2'b11;
 
