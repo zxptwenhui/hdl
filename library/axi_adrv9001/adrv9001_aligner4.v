@@ -35,53 +35,39 @@
 
 `timescale 1ns/100ps
 
-//
-// Pack two input beats into one and align it based on start of frame
-//
-// Frame size 2 beats: 
-// Temporal ordering of input: 
-//   idata : MS Beat, LS Beat, MS Beat, LS Beat, ...
-//   sof   :       1,       0,       1,       0, ...   
-// Format of output beats:  {MS Beat, LS Beat}
-//
-// Frame size 4 beats: 
-// Temporal ordering of input: 
-//   idata : MS Beat, LS Beat, MS Beat, LS Beat, MS Beat, LS Beat, ...
-//   sof   :       1,       0,       0,       0,       1,       0, ...   
-
-
-module gearbox_fts #(
-  parameter WIDTH = 8
-)(
-  input                      clk,    // Input clock
-  input                      sof,    // Start of frame indicator marking the MS Beat
-  input       [WIDTH-1:0]    idata,  // Input data beat    
-  input                      ivalid, // Input data qualifier
-  output reg  [WIDTH*2-1:0]  odata,  // Output data beat 
-  output reg                 ovalid, // Output data qualifier
-  output reg                 osof    // Output Start of frame indicator
+module adrv9001_aligner4 (
+  input             clk,
+  input       [3:0] idata,
+  input       [3:0] strobe,
+  output reg  [3:0] odata
 );
 
-  reg  [WIDTH-1:0] idata_d = {WIDTH{1'b0}};
+  reg [3:0] idata_d = 'b0;
+
   always @(posedge clk) begin
-    if (ivalid) begin
-      idata_d <= idata;
+    idata_d <= idata;
+  end
+
+  reg [1:0] phase = 'h0;
+  always @(posedge clk) begin
+    if ((strobe != 'b1111) && (strobe != 'b0000)) begin
+      casex (strobe)
+        'b1xxx  : phase <= 0;
+        'b01xx  : phase <= 1;
+        'b001x  : phase <= 2;
+        'b0001  : phase <= 3;
+        default : phase <= phase;
+      endcase
     end
   end
 
-  // Single clock mode:
-  reg [6:0] sof_d = 7'b000;
-  // Use sof_d[2] for frame size of 4 beats
-  // Use sof_d[4,6] for frame size of 8 beats
   always @(posedge clk) begin
-    if (ivalid) begin
-      sof_d <= {sof_d[5:0],sof};
-    end
-    if (ivalid &(sof_d[0] | sof_d[2] | sof_d[4] | sof_d[6])) begin
-      odata <= {idata_d,idata};
-    end
-    ovalid <= ivalid & (sof_d[0] | sof_d[2] | sof_d[4] | sof_d[6]);
-    osof <= ivalid & sof_d[0];
+    case (phase)
+      0 : odata <= idata_d;
+      1 : odata <= {idata_d[2:0],idata[3:3]};
+      2 : odata <= {idata_d[1:0],idata[3:2]};
+      3 : odata <= {idata_d[0:0],idata[3:1]};
+    endcase
   end
 
 endmodule

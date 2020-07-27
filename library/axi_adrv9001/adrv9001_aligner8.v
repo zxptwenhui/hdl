@@ -35,7 +35,7 @@
 
 `timescale 1ns/100ps
 
-module aligner8 (
+module adrv9001_aligner8 (
   input             clk,
   input       [7:0] idata,
   input             ivalid,

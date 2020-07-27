@@ -35,10 +35,9 @@ adi_ip_files axi_adrv9001 [list \
   "../../../hdl/library/xilinx/common/up_clock_mon_constr.xdc" \
   "adrv9001_rx.v" \
   "adrv9001_tx.v" \
-  "gearbox_fts.v" \
-  "gearbox_stf.v" \
-  "aligner4.v" \
-  "aligner8.v" \
+  "adrv9001_pack.v" \
+  "adrv9001_aligner4.v" \
+  "adrv9001_aligner8.v" \
   "adrv9001_rx_link.v" \
   "adrv9001_tx_link.v" \
   "axi_adrv9001_rx.v" \
