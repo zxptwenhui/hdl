@@ -39,8 +39,7 @@ module adrv9001_rx_link #(
   parameter CMOS_LVDS_N = 0
 ) (
 
-  input         adc_clk_div8,
-  input         adc_clk_div4,
+  input         adc_clk_div,
   input   [7:0] adc_data_0,
   input   [7:0] adc_data_1,
   input   [7:0] adc_data_2,
@@ -58,8 +57,6 @@ module adrv9001_rx_link #(
   input         rx_single_lane
 );
 
-  localparam SINGLE_CLK_DUAL_CLK_N = 1;
-
   wire [7:0] data_0;
   wire [7:0] data_1;
   wire [7:0] data_2;
@@ -67,7 +64,7 @@ module adrv9001_rx_link #(
   wire [7:0] data_strobe;
   wire [7:0] data_valid;
 
-  assign rx_clk = SINGLE_CLK_DUAL_CLK_N ? adc_clk_div4 : adc_clk_div8;
+  assign rx_clk = adc_clk_div;
 
   // CMOS can operate in SDR or DDR mode
   generate if (CMOS_LVDS_N) begin : cmos_4_to_8
@@ -99,35 +96,35 @@ module adrv9001_rx_link #(
 
 
     aligner4 i_rx_aligner4_0 (
-      .clk (adc_clk_div4),
+      .clk (adc_clk_div),
       .idata (sdr_data_0),
       .strobe (sdr_data_strobe),
       .odata (sdr_data_0_aligned)
     );
 
     aligner4 i_rx_aligner4_1 (
-      .clk (adc_clk_div4),
+      .clk (adc_clk_div),
       .idata (sdr_data_1),
       .strobe (sdr_data_strobe),
       .odata (sdr_data_1_aligned)
     );
 
     aligner4 i_rx_aligner4_2 (
-      .clk (adc_clk_div4),
+      .clk (adc_clk_div),
       .idata (sdr_data_2),
       .strobe (sdr_data_strobe),
       .odata (sdr_data_2_aligned)
     );
 
     aligner4 i_rx_aligner4_3 (
-      .clk (adc_clk_div4),
+      .clk (adc_clk_div),
       .idata (sdr_data_3),
       .strobe (sdr_data_strobe),
       .odata (sdr_data_3_aligned)
     );
 
     aligner4 i_rx_aligner4_strobe (
-      .clk (adc_clk_div4),
+      .clk (adc_clk_div),
       .idata (sdr_data_strobe),
       .strobe (sdr_data_strobe),
       .odata (sdr_data_strobe_aligned)
@@ -136,8 +133,7 @@ module adrv9001_rx_link #(
     gearbox_fts #(
       .WIDTH(4)
     ) i_rx_gearbox_4_to_8_0 (
-      .clk_2x (adc_clk_div4),
-      .clk (1'b0),
+      .clk (adc_clk_div),
       .idata (sdr_data_0_aligned),
       .ivalid (1'b1),
       .sof (sdr_data_strobe_aligned[3]),
@@ -148,8 +144,7 @@ module adrv9001_rx_link #(
     gearbox_fts #(
       .WIDTH(4)
     ) i_rx_gearbox_4_to_8_1 (
-      .clk_2x (adc_clk_div4),
-      .clk (1'b0),
+      .clk (adc_clk_div),
       .idata (sdr_data_1_aligned),
       .ivalid (1'b1),
       .sof (sdr_data_strobe_aligned[3]),
@@ -160,8 +155,7 @@ module adrv9001_rx_link #(
     gearbox_fts #(
       .WIDTH(4)
     ) i_rx_gearbox_4_to_8_2 (
-      .clk_2x (adc_clk_div4),
-      .clk (1'b0),
+      .clk (adc_clk_div),
       .idata (sdr_data_2_aligned),
       .ivalid (1'b1),
       .sof (sdr_data_strobe_aligned[3]),
@@ -172,8 +166,7 @@ module adrv9001_rx_link #(
     gearbox_fts #(
       .WIDTH(4)
     ) i_rx_gearbox_4_to_8_3 (
-      .clk_2x (adc_clk_div4),
-      .clk (1'b0),
+      .clk (adc_clk_div),
       .idata (sdr_data_3_aligned),
       .ivalid (1'b1),
       .sof (sdr_data_strobe_aligned[3]),
@@ -184,8 +177,7 @@ module adrv9001_rx_link #(
     gearbox_fts #(
       .WIDTH(4)
     ) i_rx_gearbox_4_to_8_strobe (
-      .clk_2x (adc_clk_div4),
-      .clk (1'b0),
+      .clk (adc_clk_div),
       .idata (sdr_data_strobe_aligned),
       .ivalid (1'b1),
       .sof (sdr_data_strobe_aligned[3]),
@@ -223,7 +215,7 @@ module adrv9001_rx_link #(
   wire [31:0] rx_data32_0_packed;
 
   aligner8 i_rx_aligner8_0(
-    .clk (adc_clk_div4),
+    .clk (adc_clk_div),
     .idata (data_0),
     .ivalid (data_valid),
     .strobe (data_strobe),
@@ -231,7 +223,7 @@ module adrv9001_rx_link #(
     .ovalid (rx_data8_0_aligned_valid)
   );
   aligner8 i_rx_aligner8_1(
-    .clk (adc_clk_div4),
+    .clk (adc_clk_div),
     .ivalid (data_valid),
     .idata (data_1),
     .strobe (data_strobe),
@@ -241,14 +233,14 @@ module adrv9001_rx_link #(
 
   generate if (CMOS_LVDS_N) begin : cmos_aligner8
     aligner8 i_rx_aligner8_2(
-      .clk (adc_clk_div4),
+      .clk (adc_clk_div),
       .idata (data_2),
       .ivalid (data_valid),
       .strobe (data_strobe),
       .odata (rx_data8_2_aligned)
     );
     aligner8 i_rx_aligner8_3(
-      .clk (adc_clk_div4),
+      .clk (adc_clk_div),
       .idata (data_3),
       .ivalid (data_valid),
       .strobe (data_strobe),
@@ -258,7 +250,7 @@ module adrv9001_rx_link #(
   endgenerate
 
   aligner8 i_rx_strobe_aligner(
-    .clk (adc_clk_div4),
+    .clk (adc_clk_div),
     .idata (data_strobe),
     .ivalid (data_valid),
     .strobe (data_strobe),
@@ -266,10 +258,9 @@ module adrv9001_rx_link #(
   );
 
   gearbox_fts #(
-    .SINGLE_CLK_DUAL_CLK_N(SINGLE_CLK_DUAL_CLK_N)
+    .WIDTH (8)
   ) i_rx_gearbox_8_to_16_0 (
-    .clk_2x (adc_clk_div4),
-    .clk (adc_clk_div8),
+    .clk (adc_clk_div),
     .ivalid (rx_data8_0_aligned_valid),
     .idata (rx_data8_0_aligned),
     .sof (rx_data8_strobe_aligned[7]),
@@ -279,10 +270,9 @@ module adrv9001_rx_link #(
   );
 
   gearbox_fts #(
-    .SINGLE_CLK_DUAL_CLK_N(SINGLE_CLK_DUAL_CLK_N)
+    .WIDTH (8)
   ) i_rx_gearbox_8_to_16_1 (
-    .clk_2x (adc_clk_div4),
-    .clk (adc_clk_div8),
+    .clk (adc_clk_div),
     .ivalid (rx_data8_1_aligned_valid),
     .idata (rx_data8_1_aligned),
     .sof (rx_data8_strobe_aligned[7]),
@@ -294,8 +284,7 @@ module adrv9001_rx_link #(
   gearbox_fts #(
     .WIDTH (16)
   ) i_rx_gearbox_16_to_32_0 (
-    .clk_2x (adc_clk_div4),
-    .clk (1'b0),
+    .clk (adc_clk_div),
     .ivalid (rx_data16_0_packed_valid),
     .idata (rx_data16_0_packed),
     .sof (rx_data16_0_packed_osof),

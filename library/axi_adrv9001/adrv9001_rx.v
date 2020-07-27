@@ -56,8 +56,7 @@ module adrv9001_rx #(
   // internal reset and clocks
   input                   adc_rst,
   output                  adc_clk,
-  output                  adc_clk_div8,
-  output                  adc_clk_div4,
+  output                  adc_clk_div,
   output      [7:0]       adc_data_0,
   output      [7:0]       adc_data_1,
   output      [7:0]       adc_data_2,
@@ -115,7 +114,7 @@ module adrv9001_rx #(
   i_serdes (
     .rst (adc_rst|ssi_rst),
     .clk (adc_clk_in_fast),
-    .div_clk (adc_clk_div4),
+    .div_clk (adc_clk_div),
     .loaden (1'b0),
     .phase (8'b0),
     .locked (1'b0),
@@ -198,7 +197,7 @@ module adrv9001_rx #(
       .CLR (mssi_sync),
       .CE (1'b1),
       .I (clk_in_s),
-      .O (adc_clk_div4));
+      .O (adc_clk_div));
 
     assign ssi_rst = mssi_sync;
 
@@ -253,7 +252,7 @@ module adrv9001_rx #(
        .IS_CLR_INVERTED (1'b0),
        .IS_I_INVERTED (1'b0)
     ) i_div_clk_buf (
-       .O (adc_clk_div4),
+       .O (adc_clk_div),
        .CE (1'b1),
        .CLR (ssi_rst),
        .I (adc_clk_in)
@@ -265,12 +264,6 @@ module adrv9001_rx #(
 
   endgenerate
 
-//  BUFR #(.BUFR_DIVIDE("8")) i_sample_clk_buf (
-//    .CLR (1'b0),
-//    .CE (1'b1),
-//    .I (clk_in_s),
-//    .O (adc_clk_div8));
-  assign adc_clk_div8 = 0;
   assign adc_clk = adc_clk_in_fast;
 
 endmodule

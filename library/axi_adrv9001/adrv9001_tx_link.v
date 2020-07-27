@@ -38,8 +38,7 @@
 module adrv9001_tx_link  #(
   parameter CMOS_LVDS_N = 0
 ) (
-  input         dac_clk_div8,
-  input         dac_clk_div4,
+  input         dac_clk_div,
   output  [7:0] dac_data_0,
   output  [7:0] dac_data_1,
   output  [7:0] dac_data_2,
@@ -59,7 +58,7 @@ module adrv9001_tx_link  #(
   input          tx_single_lane
 );
 
-  assign tx_clk = dac_clk_div4;
+  assign tx_clk = dac_clk_div;
 
   wire [7:0] data32sdr;
   wire [7:0] strobe32sdr;

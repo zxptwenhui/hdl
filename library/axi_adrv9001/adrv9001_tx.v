@@ -66,8 +66,7 @@ module adrv9001_tx #(
   // internal resets and clocks
 
   input                   dac_rst,
-  output                  dac_clk_div8,
-  output                  dac_clk_div4,
+  output                  dac_clk_div,
 
   input       [7:0]       dac_data_0,
   input       [7:0]       dac_data_1,
@@ -105,7 +104,7 @@ module adrv9001_tx #(
   i_serdes (
     .rst (dac_rst|ssi_rst),
     .clk (dac_fast_clk),
-    .div_clk (dac_clk_div4),
+    .div_clk (dac_clk_div),
     .loaden (1'b0),
     .data_oe (tx_output_enable),
     .data_s0 (data_s0),
@@ -188,7 +187,7 @@ module adrv9001_tx #(
         .CLR (mssi_sync),
         .CE (1'b1),
         .I (tx_dclk_in_s),
-        .O (dac_clk_div4));
+        .O (dac_clk_div));
 
       assign ssi_rst = mssi_sync;
 
@@ -217,7 +216,7 @@ module adrv9001_tx #(
          .IS_CLR_INVERTED (1'b0),
          .IS_I_INVERTED (1'b0)
       ) i_dac_div_clk_rbuf (
-         .O (dac_clk_div4),
+         .O (dac_clk_div),
          .CE (1'b1),
          .CLR (mssi_sync_2d),
          .I (tx_dclk_in_s)
@@ -227,22 +226,10 @@ module adrv9001_tx #(
 
     end
 
-//    // sample clock
-//    BUFR #(.BUFR_DIVIDE("8")) i_dac_clk_rbuf (
-//      .CLR (1'b0),
-//      .CE (1'b1),
-//      .I (tx_dclk_in_s),
-//      .O (dac_clk_rbufout));
-//    BUFG i_dac_clk_gbuf (
-//      .I (dac_clk_rbufout),
-//      .O (dac_clk_div8));
-    assign dac_clk_div8 = 0;
-
   end else begin
 
     assign dac_fast_clk = rx_clk;
-    assign dac_clk_div4 = rx_clk_div;
-    assign dac_clk_div8 = 1'b0;
+    assign dac_clk_div = rx_clk_div;
     assign ssi_rst = rx_ssi_rst;
 
   end

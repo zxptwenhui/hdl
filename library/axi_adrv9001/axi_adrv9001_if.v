@@ -148,16 +148,14 @@ module axi_adrv9001_if #(
   // Tx has an extra lane to drive the clock
   localparam TX_NUM_LANES = NUM_LANES + 1;
 
-  wire        adc_1_clk_div8;
-  wire        adc_1_clk_div4;
+  wire        adc_1_clk_div;
   wire  [7:0] adc_1_data_0;
   wire  [7:0] adc_1_data_1;
   wire  [7:0] adc_1_data_2;
   wire  [7:0] adc_1_data_3;
   wire  [7:0] adc_1_data_strobe;
 
-  wire        adc_2_clk_div8;
-  wire        adc_2_clk_div4;
+  wire        adc_2_clk_div;
   wire  [7:0] adc_2_data_0;
   wire  [7:0] adc_2_data_1;
   wire  [7:0] adc_2_data_2;
@@ -201,8 +199,7 @@ module axi_adrv9001_if #(
 
     .adc_rst (rx1_rst),
     .adc_clk (adc_1_clk),
-    .adc_clk_div8 (adc_1_clk_div8),
-    .adc_clk_div4 (adc_1_clk_div4),
+    .adc_clk_div (adc_1_clk_div),
     .adc_data_0 (adc_1_data_0),
     .adc_data_1 (adc_1_data_1),
     .adc_data_2 (adc_1_data_2),
@@ -226,8 +223,7 @@ module axi_adrv9001_if #(
   adrv9001_rx_link #(
     .CMOS_LVDS_N (CMOS_LVDS_N)
   ) i_rx_1_link (
-    .adc_clk_div8 (adc_1_clk_div8),
-    .adc_clk_div4 (adc_1_clk_div4),
+    .adc_clk_div (adc_1_clk_div),
     .adc_data_0 (adc_1_data_0),
     .adc_data_1 (adc_1_data_1),
     .adc_data_2 (adc_1_data_2),
@@ -261,8 +257,7 @@ module axi_adrv9001_if #(
 
     .adc_rst (rx2_rst),
     .adc_clk (adc_2_clk),
-    .adc_clk_div8 (adc_2_clk_div8),
-    .adc_clk_div4 (adc_2_clk_div4),
+    .adc_clk_div (adc_2_clk_div),
     .adc_data_0 (adc_2_data_0),
     .adc_data_1 (adc_2_data_1),
     .adc_data_2 (adc_2_data_2),
@@ -286,8 +281,7 @@ module axi_adrv9001_if #(
   adrv9001_rx_link #(
     .CMOS_LVDS_N (CMOS_LVDS_N)
   ) i_rx_2_link (
-    .adc_clk_div8 (adc_2_clk_div8),
-    .adc_clk_div4 (adc_2_clk_div4),
+    .adc_clk_div (adc_2_clk_div),
     .adc_data_0 (adc_2_data_0),
     .adc_data_1 (adc_2_data_1),
     .adc_data_2 (adc_2_data_2),
@@ -325,13 +319,12 @@ module axi_adrv9001_if #(
    .tx_strobe_out_n_NC (tx1_strobe_out_n_NC),
    .tx_strobe_out_p_strobe_out (tx1_strobe_out_p_strobe_out),
 
-   .rx_clk_div (adc_1_clk_div4),
+   .rx_clk_div (adc_1_clk_div),
    .rx_clk (adc_1_clk),
    .rx_ssi_rst (adc_1_ssi_rst),
 
    .dac_rst (tx1_rst),
-   .dac_clk_div8 (dac_1_clk_div8),
-   .dac_clk_div4 (dac_1_clk_div4),
+   .dac_clk_div (dac_1_clk_div),
 
    .dac_data_0 (dac_1_data_0),
    .dac_data_1 (dac_1_data_1),
@@ -346,8 +339,7 @@ module axi_adrv9001_if #(
   adrv9001_tx_link #(
     .CMOS_LVDS_N (CMOS_LVDS_N)
   ) i_tx_1_link (
-    .dac_clk_div8 (dac_1_clk_div8),
-    .dac_clk_div4 (dac_1_clk_div4),
+    .dac_clk_div (dac_1_clk_div),
     .dac_data_0 (dac_1_data_0),
     .dac_data_1 (dac_1_data_1),
     .dac_data_2 (dac_1_data_2),
@@ -392,8 +384,7 @@ module axi_adrv9001_if #(
    .rx_ssi_rst (adc_2_ssi_rst),
 
    .dac_rst (tx2_rst),
-   .dac_clk_div8 (dac_2_clk_div8),
-   .dac_clk_div4 (dac_2_clk_div4),
+   .dac_clk_div (dac_2_clk_div),
 
    .dac_data_0 (dac_2_data_0),
    .dac_data_1 (dac_2_data_1),
@@ -408,8 +399,7 @@ module axi_adrv9001_if #(
   adrv9001_tx_link #(
     .CMOS_LVDS_N (CMOS_LVDS_N)
   ) i_tx_2_link (
-    .dac_clk_div8 (dac_2_clk_div8),
-    .dac_clk_div4 (dac_2_clk_div4),
+    .dac_clk_div (dac_2_clk_div),
     .dac_data_0 (dac_2_data_0),
     .dac_data_1 (dac_2_data_1),
     .dac_data_2 (dac_2_data_2),
