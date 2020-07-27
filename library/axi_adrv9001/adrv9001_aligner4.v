@@ -38,14 +38,18 @@
 module adrv9001_aligner4 (
   input             clk,
   input       [3:0] idata,
+  input             ivalid,
   input       [3:0] strobe,
-  output reg  [3:0] odata
+  output reg  [3:0] odata,
+  output reg        ovalid
 );
 
   reg [3:0] idata_d = 'b0;
+  reg       ivalid_d = 'b0;
 
   always @(posedge clk) begin
     idata_d <= idata;
+    ivalid_d <= ivalid;
   end
 
   reg [1:0] phase = 'h0;
@@ -68,6 +72,7 @@ module adrv9001_aligner4 (
       2 : odata <= {idata_d[1:0],idata[3:2]};
       3 : odata <= {idata_d[0:0],idata[3:1]};
     endcase
+    ovalid <= ivalid_d;
   end
 
 endmodule

@@ -205,6 +205,7 @@ module axi_adrv9001_if #(
     .adc_data_2 (adc_1_data_2),
     .adc_data_3 (adc_1_data_3),
     .adc_data_strobe (adc_1_data_strobe),
+    .adc_valid (adc_1_valid),
 
     .up_clk (up_clk),
     .up_adc_dld (up_rx1_dld),
@@ -229,6 +230,7 @@ module axi_adrv9001_if #(
     .adc_data_2 (adc_1_data_2),
     .adc_data_3 (adc_1_data_3),
     .adc_data_strobe (adc_1_data_strobe),
+    .adc_valid (adc_1_valid),
     // ADC interface
     .rx_clk (rx1_clk),
     .rx_data_valid (rx1_data_valid),
@@ -263,6 +265,7 @@ module axi_adrv9001_if #(
     .adc_data_2 (adc_2_data_2),
     .adc_data_3 (adc_2_data_3),
     .adc_data_strobe (adc_2_data_strobe),
+    .adc_valid (adc_2_valid),
 
     .up_clk (up_clk),
     .up_adc_dld (up_rx2_dld),
@@ -287,6 +290,7 @@ module axi_adrv9001_if #(
     .adc_data_2 (adc_2_data_2),
     .adc_data_3 (adc_2_data_3),
     .adc_data_strobe (adc_2_data_strobe),
+    .adc_valid (adc_2_valid),
     // ADC interface
     .rx_clk (rx2_clk),
     .rx_data_valid (rx2_data_valid),

@@ -62,6 +62,7 @@ module adrv9001_rx #(
   output      [7:0]       adc_data_2,
   output      [7:0]       adc_data_3,
   output      [7:0]       adc_data_strobe,
+  output                  adc_valid,
 
   // delay interface (for IDELAY macros)
   input                             up_clk,
@@ -265,5 +266,6 @@ module adrv9001_rx #(
   endgenerate
 
   assign adc_clk = adc_clk_in_fast;
+  assign adc_valid = 1'b1;
 
 endmodule
