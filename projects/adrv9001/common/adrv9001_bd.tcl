@@ -187,7 +187,7 @@ ad_connect tx2_strobe_out_p  axi_adrv9001/tx2_strobe_out_p_strobe_out
 
 # RX1_RX2 - CPACK - RX_DMA1
 ad_connect  axi_adrv9001/adc_1_rst       util_adc_1_pack/reset
-ad_connect  axi_adrv9001/adc_1_valid     util_adc_1_pack/fifo_wr_en
+ad_connect  axi_adrv9001/adc_1_valid_i0  util_adc_1_pack/fifo_wr_en
 ad_connect  axi_adrv9001/adc_1_enable_i0 util_adc_1_pack/enable_0
 ad_connect  axi_adrv9001/adc_1_data_i0   util_adc_1_pack/fifo_wr_data_0
 ad_connect  axi_adrv9001/adc_1_enable_q0 util_adc_1_pack/enable_1
@@ -203,12 +203,12 @@ ad_connect util_adc_1_pack/packed_fifo_wr axi_adrv9001_rx1_dma/fifo_wr
 
 
 # RX2 - CPACK - RX_DMA2
-ad_connect  axi_adrv9001/adc_2_rst      util_adc_2_pack/reset
-ad_connect  axi_adrv9001/adc_2_valid    util_adc_2_pack/fifo_wr_en
-ad_connect  axi_adrv9001/adc_2_enable_i util_adc_2_pack/enable_0
-ad_connect  axi_adrv9001/adc_2_data_i   util_adc_2_pack/fifo_wr_data_0
-ad_connect  axi_adrv9001/adc_2_enable_q util_adc_2_pack/enable_1
-ad_connect  axi_adrv9001/adc_2_data_q   util_adc_2_pack/fifo_wr_data_1
+ad_connect  axi_adrv9001/adc_2_rst       util_adc_2_pack/reset
+ad_connect  axi_adrv9001/adc_2_valid_i0  util_adc_2_pack/fifo_wr_en
+ad_connect  axi_adrv9001/adc_2_enable_i0 util_adc_2_pack/enable_0
+ad_connect  axi_adrv9001/adc_2_data_i0   util_adc_2_pack/fifo_wr_data_0
+ad_connect  axi_adrv9001/adc_2_enable_q0 util_adc_2_pack/enable_1
+ad_connect  axi_adrv9001/adc_2_data_q0   util_adc_2_pack/fifo_wr_data_1
 
 ad_connect  axi_adrv9001/adc_2_dovf       util_adc_2_pack/fifo_wr_overflow
 
@@ -216,7 +216,7 @@ ad_connect util_adc_2_pack/packed_fifo_wr axi_adrv9001_rx2_dma/fifo_wr
 
 # TX_DMA1 - UPACK - TX1
 ad_connect  axi_adrv9001/dac_1_rst        util_dac_1_upack/reset
-ad_connect  axi_adrv9001/dac_1_valid      util_dac_1_upack/fifo_rd_en
+ad_connect  axi_adrv9001/dac_1_valid_i0   util_dac_1_upack/fifo_rd_en
 ad_connect  axi_adrv9001/dac_1_enable_i0  util_dac_1_upack/enable_0
 ad_connect  axi_adrv9001/dac_1_data_i0    util_dac_1_upack/fifo_rd_data_0
 ad_connect  axi_adrv9001/dac_1_enable_q0  util_dac_1_upack/enable_1
@@ -230,7 +230,7 @@ ad_connect  axi_adrv9001_tx1_dma/m_axis   util_dac_1_upack/s_axis
 
 # TX_DMA2 - UPACK - TX2
 ad_connect  axi_adrv9001/dac_2_rst        util_dac_2_upack/reset
-ad_connect  axi_adrv9001/dac_2_valid      util_dac_2_upack/fifo_rd_en
+ad_connect  axi_adrv9001/dac_2_valid_i0   util_dac_2_upack/fifo_rd_en
 ad_connect  axi_adrv9001/dac_2_enable_i0  util_dac_2_upack/enable_0
 ad_connect  axi_adrv9001/dac_2_data_i0    util_dac_2_upack/fifo_rd_data_0
 ad_connect  axi_adrv9001/dac_2_enable_q0  util_dac_2_upack/enable_1
