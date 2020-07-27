@@ -96,44 +96,53 @@ module axi_adrv9001 #(
 
   output                  adc_1_clk,
   output                  adc_1_rst,
-  output                  adc_1_valid,
+
+  output                  adc_1_valid_i0,
   output                  adc_1_enable_i0,
   output      [15:0]      adc_1_data_i0,
+  output                  adc_1_valid_q0,
   output                  adc_1_enable_q0,
   output      [15:0]      adc_1_data_q0,
+  output                  adc_1_valid_i1,
   output                  adc_1_enable_i1,
   output      [15:0]      adc_1_data_i1,
+  output                  adc_1_valid_q1,
   output                  adc_1_enable_q1,
   output      [15:0]      adc_1_data_q1,
   input                   adc_1_dovf,
 
   output                  adc_2_clk,
   output                  adc_2_rst,
-  output                  adc_2_valid,
-  output                  adc_2_enable_i,
-  output      [15:0]      adc_2_data_i,
-  output                  adc_2_enable_q,
-  output      [15:0]      adc_2_data_q,
+  output                  adc_2_valid_i0,
+  output                  adc_2_enable_i0,
+  output      [15:0]      adc_2_data_i0,
+  output                  adc_2_valid_q0,
+  output                  adc_2_enable_q0,
+  output      [15:0]      adc_2_data_q0,
   input                   adc_2_dovf,
 
   output                  dac_1_clk,
   output                  dac_1_rst,
-  output                  dac_1_valid,
+  output                  dac_1_valid_i0,
   output                  dac_1_enable_i0,
   input       [15:0]      dac_1_data_i0,
+  output                  dac_1_valid_q0,
   output                  dac_1_enable_q0,
   input       [15:0]      dac_1_data_q0,
+  output                  dac_1_valid_i1,
   output                  dac_1_enable_i1,
   input       [15:0]      dac_1_data_i1,
+  output                  dac_1_valid_q1,
   output                  dac_1_enable_q1,
   input       [15:0]      dac_1_data_q1,
   input                   dac_1_dunf,
 
   output                  dac_2_clk,
   output                  dac_2_rst,
-  output                  dac_2_valid,
+  output                  dac_2_valid_i0,
   output                  dac_2_enable_i0,
   input       [15:0]      dac_2_data_i0,
+  output                  dac_2_valid_q0,
   output                  dac_2_enable_q0,
   input       [15:0]      dac_2_data_q0,
   input                   dac_2_dunf,
@@ -441,6 +450,20 @@ module axi_adrv9001 #(
     .up_rdata (up_rdata_s),
     .up_rack (up_rack_s)
   );
+
+  assign adc_1_valid_i0 = adc_1_valid;
+  assign adc_1_valid_q0 = adc_1_valid;
+  assign adc_1_valid_i1 = adc_1_valid;
+  assign adc_1_valid_q1 = adc_1_valid;
+  assign adc_2_valid_i0 = adc_2_valid;
+  assign adc_2_valid_q0 = adc_2_valid;
+
+  assign dac_1_valid_i0 = dac_1_valid;
+  assign dac_1_valid_q0 = dac_1_valid;
+  assign dac_1_valid_i1 = dac_1_valid;
+  assign dac_1_valid_q1 = dac_1_valid;
+  assign dac_2_valid_i0 = dac_2_valid;
+  assign dac_2_valid_q0 = dac_2_valid;
 
   assign adc_1_clk = rx1_clk;
   assign adc_2_clk = rx2_clk;
