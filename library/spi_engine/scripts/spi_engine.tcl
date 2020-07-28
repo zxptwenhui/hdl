@@ -9,7 +9,7 @@ proc spi_engine_create {{name "hier_spi_engine"} {data_width 32} {async_spi_clk 
   create_bd_pin -dir I trigger
   create_bd_pin -dir O irq
   create_bd_intf_pin -mode Master -vlnv analog.com:interface:spi_master_rtl:1.0 m_spi
-  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 M_AXIS_SAMPLE
+  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 m_axis_sample
   
   ad_ip_instance spi_engine_execution execution
   ad_ip_parameter execution CONFIG.DATA_WIDTH $data_width
@@ -34,7 +34,8 @@ proc spi_engine_create {{name "hier_spi_engine"} {data_width 32} {async_spi_clk 
   ad_connect offload/spi_engine_ctrl interconnect/s0_ctrl
   ad_connect axi_regmap/spi_engine_ctrl interconnect/s1_ctrl
   ad_connect interconnect/m_ctrl execution/ctrl
-  ad_connect offload/offload_sdi M_AXIS_SAMPLE
+  ad_connect offload/offload_sdi m_axis_sample
+  ad_connect offload/trigger trigger
 
   ad_connect execution/spi m_spi
 

@@ -1,13 +1,15 @@
 
 source $ad_hdl_dir/library/spi_engine/scripts/spi_engine.tcl
+source ../common/config.tcl
 
-set data_width 32
-set async_spi_clk 1
-set num_cs 1
-set num_sdi 1
-set sdi_delay 2
+set data_width    [get_config_param DATA_WIDTH]
+set async_spi_clk [get_config_param ASYNC_SPI_CLK]
+set num_cs        [get_config_param NUM_CS]
+set num_sdi       [get_config_param NUM_SDI]
+set sdi_delay     [get_config_param SDI_DELAY]
+
 set hier_spi_engine spi_ad40xx
-
+ 
 spi_engine_create $hier_spi_engine $data_width $async_spi_clk $num_cs $num_sdi $sdi_delay
 
 create_bd_intf_port -mode Master -vlnv analog.com:interface:spi_master_rtl:1.0 ad40xx_spi
