@@ -223,12 +223,11 @@ module system_top (
     .sys_gpio_bd_out_port (gpio_o[31:0]),
     .sys_gpio_in_export (gpio_i[63:32]),
     .sys_gpio_out_export (gpio_o[63:32]),
-    .spi_engine_sdo_sdo (cn0540_spi_mosi),
-    .spi_engine_sdo_t_sdo_t (),
-    .spi_engine_sdi_sdi (cn0540_spi_miso),
-    .spi_engine_cs_cs (cn0540_spi_cs),
-    .spi_engine_sclk_clk (cn0540_spi_sclk),
-    .spi_engine_trigger_trigger (cn0540_drdy));
+    .cn0540_spi_sdo_sdo (cn0540_spi_mosi),
+    .cn0540_spi_sdi_sdi (cn0540_spi_miso),
+    .cn0540_spi_cs_cs (cn0540_spi_cs),
+    .cn0540_spi_sclk_clk (cn0540_spi_sclk),
+    .cn0540_spi_trigger_trigger (cn0540_drdy));
 
 endmodule
 
