@@ -140,13 +140,33 @@ proc ad_dma_interconnect {m_port m_id} {
   set_connection_parameter_value ${m_port}/sys_hps.f2h_sdram2_data baseAddress {0x0000}
 }
 
-# common dma interfaces
+# common dma interfaces clock is generated from PLL_0 - 40MHz
+
+add_instance pll_0 altera_pll
+set_instance_parameter_value pll_0 {gui_duty_cycle0} {50}
+set_instance_parameter_value pll_0 {gui_feedback_clock} {Global Clock}
+set_instance_parameter_value pll_0 {gui_operation_mode} {direct}
+set_instance_parameter_value pll_0 {gui_output_clock_frequency0} {40.0}
+set_instance_parameter_value pll_0 {gui_phase_shift0} {0}
+set_instance_parameter_value pll_0 {gui_phase_shift_deg0} {0.0}
+set_instance_parameter_value pll_0 {gui_phout_division} {1}
+set_instance_parameter_value pll_0 {gui_pll_auto_reset} {Off}
+set_instance_parameter_value pll_0 {gui_pll_bandwidth_preset} {Auto}
+set_instance_parameter_value pll_0 {gui_pll_mode} {Integer-N PLL}
+set_instance_parameter_value pll_0 {gui_ps_units0} {ps}
+set_instance_parameter_value pll_0 {gui_refclk_switch} {0}
+set_instance_parameter_value pll_0 {gui_reference_clock_frequency} {50.0}
 
 add_instance sys_dma_clk clock_source
-add_connection sys_clk.clk sys_dma_clk.clk_in
+add_connection pll_0.outclk0 sys_dma_clk.clk_in
 add_connection sys_clk.clk_reset sys_dma_clk.clk_in_reset
 add_connection sys_dma_clk.clk sys_hps.f2h_sdram1_clock
 add_connection sys_dma_clk.clk sys_hps.f2h_sdram2_clock
+
+add_connection sys_clk.clk pll_0.refclk clock
+add_connection sys_clk.clk_reset pll_0.reset reset
+add_connection pll_0.outclk0 sys_hps.f2h_sdram1_clock clock
+add_connection pll_0.outclk0 sys_hps.f2h_sdram2_clock clock
 
 # internal memory
 
@@ -232,7 +252,6 @@ set_instance_parameter_value pixel_clk_pll {gui_phout_division} {1}
 set_instance_parameter_value pixel_clk_pll {gui_pll_auto_reset} {Off}
 set_instance_parameter_value pixel_clk_pll {gui_pll_bandwidth_preset} {Auto}
 set_instance_parameter_value pixel_clk_pll {gui_pll_mode} {Fractional-N PLL}
-#set_instance_parameter_value pixel_clk_pll {gui_pll_mode} {Integer-N PLL}
 set_instance_parameter_value pixel_clk_pll {gui_ps_units0} {ps}
 set_instance_parameter_value pixel_clk_pll {gui_refclk_switch} {0}
 set_instance_parameter_value pixel_clk_pll {gui_reference_clock_frequency} {50.0}
