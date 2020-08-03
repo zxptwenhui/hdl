@@ -192,7 +192,7 @@ module adrv9001_rx #(
 
     BUFIO i_clk_buf (
       .I (clk_in_s),
-      .O (adc_clk_in));
+      .O (adc_clk_in_fast));
 
     BUFR #(.BUFR_DIVIDE("4")) i_div_clk_buf (
       .CLR (mssi_sync),
