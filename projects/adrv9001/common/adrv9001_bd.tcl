@@ -227,6 +227,7 @@ ad_connect  axi_adrv9001/dac_1_enable_q1  util_dac_1_upack/enable_3
 ad_connect  axi_adrv9001/dac_1_data_q1    util_dac_1_upack/fifo_rd_data_3
 
 ad_connect  axi_adrv9001_tx1_dma/m_axis   util_dac_1_upack/s_axis
+ad_connect  axi_adrv9001/dac_1_dunf       util_dac_1_upack/fifo_rd_underflow
 
 # TX_DMA2 - UPACK - TX2
 ad_connect  axi_adrv9001/dac_2_rst        util_dac_2_upack/reset
@@ -237,6 +238,7 @@ ad_connect  axi_adrv9001/dac_2_enable_q0  util_dac_2_upack/enable_1
 ad_connect  axi_adrv9001/dac_2_data_q0    util_dac_2_upack/fifo_rd_data_1
 
 ad_connect  axi_adrv9001_tx2_dma/m_axis   util_dac_2_upack/s_axis
+ad_connect  axi_adrv9001/dac_2_dunf       util_dac_2_upack/fifo_rd_underflow
 
 # interconnect
 
@@ -254,10 +256,10 @@ ad_mem_hp1_interconnect $sys_dma_clk axi_adrv9001_rx2_dma/m_dest_axi
 ad_mem_hp1_interconnect $sys_dma_clk axi_adrv9001_tx1_dma/m_src_axi
 ad_mem_hp1_interconnect $sys_dma_clk axi_adrv9001_tx2_dma/m_src_axi
 
-ad_connect sys_cpu_resetn axi_adrv9001_rx1_dma/m_dest_axi_aresetn
-ad_connect sys_cpu_resetn axi_adrv9001_rx2_dma/m_dest_axi_aresetn
-ad_connect sys_cpu_resetn axi_adrv9001_tx1_dma/m_src_axi_aresetn
-ad_connect sys_cpu_resetn axi_adrv9001_tx2_dma/m_src_axi_aresetn
+ad_connect $sys_dma_resetn axi_adrv9001_rx1_dma/m_dest_axi_aresetn
+ad_connect $sys_dma_resetn axi_adrv9001_rx2_dma/m_dest_axi_aresetn
+ad_connect $sys_dma_resetn axi_adrv9001_tx1_dma/m_src_axi_aresetn
+ad_connect $sys_dma_resetn axi_adrv9001_tx2_dma/m_src_axi_aresetn
 # interrupts
 
 ad_cpu_interrupt ps-13 mb-12 axi_adrv9001_rx1_dma/irq
