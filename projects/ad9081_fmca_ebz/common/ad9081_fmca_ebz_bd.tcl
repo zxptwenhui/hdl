@@ -526,3 +526,42 @@ for {set i $RX_NUM_OF_LANES} {$i < 8} {incr i} {
   create_bd_port -dir I rx_data_${i}_p
 }
 }
+
+#  SPI and IIC for PMOD0 and PMOD1
+
+create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 iic_pmod
+ad_ip_instance axi_iic axi_iic_pmod
+ad_connect iic_pmod axi_iic_pmod/iic
+
+ad_cpu_interrupt ps-14 mb-8 axi_iic_pmod/iic2intc_irpt
+
+ad_cpu_interconnect 0x45100000 axi_iic_pmod
+
+create_bd_port -dir O -from 7 -to 0 spi_pmod_csn_o
+create_bd_port -dir I -from 7 -to 0 spi_pmod_csn_i
+create_bd_port -dir I spi_pmod_clk_i
+create_bd_port -dir O spi_pmod_clk_o
+create_bd_port -dir I spi_pmod_sdo_i
+create_bd_port -dir O spi_pmod_sdo_o
+create_bd_port -dir I spi_pmod_sdi_i
+
+# SPI at 390.625kHz
+ad_ip_instance axi_quad_spi axi_spi_pmod
+ad_ip_parameter axi_spi_pmod CONFIG.C_USE_STARTUP 0
+ad_ip_parameter axi_spi_pmod CONFIG.C_NUM_SS_BITS 8
+ad_ip_parameter axi_spi_pmod CONFIG.C_SCK_RATIO 16
+ad_ip_parameter axi_spi_pmod CONFIG.Multiples16 16
+
+ad_connect spi_pmod_csn_i axi_spi_pmod/ss_i
+ad_connect spi_pmod_csn_o axi_spi_pmod/ss_o
+ad_connect spi_pmod_clk_i axi_spi_pmod/sck_i
+ad_connect spi_pmod_clk_o axi_spi_pmod/sck_o
+ad_connect spi_pmod_sdo_i axi_spi_pmod/io0_i
+ad_connect spi_pmod_sdo_o axi_spi_pmod/io0_o
+ad_connect spi_pmod_sdi_i axi_spi_pmod/io1_i
+
+ad_connect $sys_cpu_clk axi_spi_pmod/ext_spi_clk
+
+ad_cpu_interrupt ps-15 mb-7 axi_spi_pmod/ip2intc_irpt
+
+ad_cpu_interconnect 0x45200000 axi_spi_pmod

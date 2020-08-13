@@ -86,3 +86,19 @@ set_property         -dict {PACKAGE_PIN AA7   IOSTANDARD LVDS     DIFF_TERM_ADV 
 set_property         -dict {PACKAGE_PIN W2    IOSTANDARD LVCMOS18                       } [get_ports txen[0]          ]    ; ## FMC0_LA09_P         IO_L24P_T3U_N10_66
 set_property         -dict {PACKAGE_PIN W1    IOSTANDARD LVCMOS18                       } [get_ports txen[1]          ]    ; ## FMC0_LA09_N         IO_L24N_T3U_N11_66
 
+set_property         -dict {PACKAGE_PIN A20   IOSTANDARD LVCMOS33                       } [get_ports pmod0_0_1_PA_ON      ]; ## J55.1
+set_property         -dict {PACKAGE_PIN B20   IOSTANDARD LVCMOS33                       } [get_ports pmod0_1_3_MOSI       ]; ## J55.3
+set_property         -dict {PACKAGE_PIN A22   IOSTANDARD LVCMOS33                       } [get_ports pmod0_2_5_MISO       ]; ## J55.5
+set_property         -dict {PACKAGE_PIN A21   IOSTANDARD LVCMOS33                       } [get_ports pmod0_3_7_SCLK       ]; ## J55.7
+set_property         -dict {PACKAGE_PIN B21   IOSTANDARD LVCMOS33                       } [get_ports pmod0_4_2_TR         ]; ## J55.2
+set_property         -dict {PACKAGE_PIN C21   IOSTANDARD LVCMOS33                       } [get_ports pmod0_5_4_TX_LOAD    ]; ## J55.4
+set_property         -dict {PACKAGE_PIN C22   IOSTANDARD LVCMOS33                       } [get_ports pmod0_6_6_RX_LOAD    ]; ## J55.6
+set_property         -dict {PACKAGE_PIN D21   IOSTANDARD LVCMOS33                       } [get_ports pmod0_7_8_SCL        ]; ## J55.8
+set_property         -dict {PACKAGE_PIN D20   IOSTANDARD LVCMOS33                       } [get_ports pmod1_0_1_CSB1       ]; ## J87.1
+set_property         -dict {PACKAGE_PIN E20   IOSTANDARD LVCMOS33                       } [get_ports pmod1_1_3_CSB3       ]; ## J87.3
+set_property         -dict {PACKAGE_PIN D22   IOSTANDARD LVCMOS33                       } [get_ports pmod1_2_5_CSB5       ]; ## J87.5
+set_property         -dict {PACKAGE_PIN E22   IOSTANDARD LVCMOS33                       } [get_ports pmod1_3_7_SDA        ]; ## J87.7
+set_property         -dict {PACKAGE_PIN F20   IOSTANDARD LVCMOS33                       } [get_ports pmod1_4_2_CSB2       ]; ## J87.2
+set_property         -dict {PACKAGE_PIN G20   IOSTANDARD LVCMOS33                       } [get_ports pmod1_5_4_CSB4       ]; ## J87.4
+set_property         -dict {PACKAGE_PIN J20   IOSTANDARD LVCMOS33                       } [get_ports pmod1_6_6_5V_CTRL    ]; ## J87.6
+set_property         -dict {PACKAGE_PIN J19   IOSTANDARD LVCMOS33                       } [get_ports pmod1_7_8_PWR_UP_DOWN]; ## J77.8

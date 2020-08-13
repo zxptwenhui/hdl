@@ -81,7 +81,26 @@ module system_top  #(
   inout         spi1_sdio,
   input         sysref2_n,
   input         sysref2_p,
-  output [1:0]  txen
+  output [1:0]  txen,
+
+  // PMOD0
+  output        pmod0_0_1_PA_ON,
+  output        pmod0_4_2_TR,
+  output        pmod0_1_3_MOSI,
+  output        pmod0_5_4_TX_LOAD,
+  input         pmod0_2_5_MISO,
+  output        pmod0_6_6_RX_LOAD,
+  output        pmod0_3_7_SCLK,
+  inout         pmod0_7_8_SCL,
+  // PMOD1      
+  output        pmod1_0_1_CSB1,
+  output        pmod1_4_2_CSB2,
+  output        pmod1_1_3_CSB3,
+  output        pmod1_5_4_CSB4,
+  output        pmod1_2_5_CSB5,
+  output        pmod1_6_6_5V_CTRL,
+  inout         pmod1_3_7_SDA,
+  output        pmod1_7_8_PWR_UP_DOWN
 
 );
 
@@ -111,8 +130,19 @@ module system_top  #(
   wire            tx_device_clk;
   wire            rx_device_clk;
 
-  assign iic_rstn = 1'b1;
+  wire [7:0] spi_pmod_csn;
+  wire       spi_pmod_clk;
+  wire       spi_pmod_mosi;
 
+  assign pmod0_1_3_MOSI = spi_pmod_mosi;
+  assign pmod1_0_1_CSB1 = spi_pmod_csn[1];
+  assign pmod1_4_2_CSB2 = spi_pmod_csn[2];
+  assign pmod1_1_3_CSB3 = spi_pmod_csn[3];
+  assign pmod1_5_4_CSB4 = spi_pmod_csn[4];
+  assign pmod1_2_5_CSB5 = spi_pmod_csn[5];
+  assign pmod0_3_7_SCLK = spi_pmod_clk;
+
+  assign iic_rstn = 1'b1;
   // instantiations
 
   IBUFDS_GTE4 i_ibufds_ref_clk (
@@ -205,6 +235,14 @@ module system_top  #(
   assign txen[1]          = gpio_o[59];
   assign dac_fifo_bypass  = gpio_o[60];
 
+  // PMOD GPIOs
+  assign pmod0_0_1_PA_ON       = gpio_o[61];
+  assign pmod0_4_2_TR          = gpio_o[62];
+  assign pmod0_5_4_TX_LOAD     = gpio_o[63];
+  assign pmod0_6_6_RX_LOAD     = gpio_o[64];
+  assign pmod1_6_6_5V_CTRL     = gpio_o[65];
+  assign pmod1_7_8_PWR_UP_DOWN = gpio_o[66];
+
   /* Board GPIOS. Buttons, LEDs, etc... */
   assign gpio_i[20: 8] = gpio_bd_i;
   assign gpio_bd_o = gpio_o[7:0];
@@ -267,7 +305,17 @@ module system_top  #(
     .tx_sync_0 (tx_syncin),
     .rx_sysref_0 (sysref),
     .tx_sysref_0 (sysref),
-    .dac_fifo_bypass (dac_fifo_bypass)
+    .dac_fifo_bypass (dac_fifo_bypass),
+    // PMOD stuff
+    .iic_pmod_scl_io (pmod0_7_8_SCL),
+    .iic_pmod_sda_io (pmod1_3_7_SDA),
+    .spi_pmod_clk_i (spi_pmod_clk),
+    .spi_pmod_clk_o (spi_pmod_clk),
+    .spi_pmod_csn_i (spi_pmod_csn),
+    .spi_pmod_csn_o (spi_pmod_csn),
+    .spi_pmod_sdi_i (pmod0_2_5_MISO),
+    .spi_pmod_sdo_i (spi_pmod_mosi),
+    .spi_pmod_sdo_o (spi_pmod_mosi)
   );
 
   assign rx_data_p_loc[TX_JESD_L*TX_NUM_LINKS-1:0] = rx_data_p[TX_JESD_L*TX_NUM_LINKS-1:0];
