@@ -101,4 +101,4 @@ set_property         -dict {PACKAGE_PIN E22   IOSTANDARD LVCMOS33               
 set_property         -dict {PACKAGE_PIN F20   IOSTANDARD LVCMOS33                       } [get_ports pmod1_4_2_CSB2       ]; ## J87.2
 set_property         -dict {PACKAGE_PIN G20   IOSTANDARD LVCMOS33                       } [get_ports pmod1_5_4_CSB4       ]; ## J87.4
 set_property         -dict {PACKAGE_PIN J20   IOSTANDARD LVCMOS33                       } [get_ports pmod1_6_6_5V_CTRL    ]; ## J87.6
-set_property         -dict {PACKAGE_PIN J19   IOSTANDARD LVCMOS33                       } [get_ports pmod1_7_8_PWR_UP_DOWN]; ## J77.8
+set_property         -dict {PACKAGE_PIN J19   IOSTANDARD LVCMOS33                       } [get_ports pmod1_7_8_PWR_UP_DOWN]; ## J87.8
