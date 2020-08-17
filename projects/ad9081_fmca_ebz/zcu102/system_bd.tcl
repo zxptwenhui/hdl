@@ -50,4 +50,5 @@ ad_ip_parameter util_mxfe_xcvr CONFIG.QPLL_CP 0xFF
 ad_ip_parameter util_mxfe_xcvr CONFIG.QPLL_CP_G3 0xF
 ad_ip_parameter util_mxfe_xcvr CONFIG.QPLL_LPF 0x2FF
 
-
+create_bd_port -dir O sys_clk
+ad_connect sys_ps8/pl_clk0 sys_clk

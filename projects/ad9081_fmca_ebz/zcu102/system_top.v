@@ -92,7 +92,7 @@ module system_top  #(
   output        pmod0_6_6_RX_LOAD,
   output        pmod0_3_7_SCLK,
   inout         pmod0_7_8_SCL,
-  // PMOD1      
+  // PMOD1
   output        pmod1_0_1_CSB1,
   output        pmod1_4_2_CSB2,
   output        pmod1_1_3_CSB3,
@@ -105,6 +105,7 @@ module system_top  #(
 );
 
   // internal signals
+  reg [10:0] pwr_up_cnt = {1'b1,10'b0};
 
   wire    [94:0]  gpio_i;
   wire    [94:0]  gpio_o;
@@ -133,6 +134,8 @@ module system_top  #(
   wire [7:0] spi_pmod_csn;
   wire       spi_pmod_clk;
   wire       spi_pmod_mosi;
+  wire       pwr_up;
+  wire       sys_clk;
 
   assign pmod0_1_3_MOSI = spi_pmod_mosi;
   assign pmod1_0_1_CSB1 = spi_pmod_csn[1];
@@ -241,7 +244,7 @@ module system_top  #(
   assign pmod0_5_4_TX_LOAD     = gpio_o[63];
   assign pmod0_6_6_RX_LOAD     = gpio_o[64];
   assign pmod1_6_6_5V_CTRL     = gpio_o[65];
-  assign pmod1_7_8_PWR_UP_DOWN = 1'b1;
+  assign pmod1_7_8_PWR_UP_DOWN = pwr_up | gpio_o[66];
 
   /* Board GPIOS. Buttons, LEDs, etc... */
   assign gpio_i[20: 8] = gpio_bd_i;
@@ -253,6 +256,7 @@ module system_top  #(
   assign gpio_i[7:0] = gpio_o[7:0];
 
   system_wrapper i_system_wrapper (
+    .sys_clk (sys_clk),
     .gpio_i (gpio_i),
     .gpio_o (gpio_o),
     .gpio_t (gpio_t),
@@ -324,6 +328,14 @@ module system_top  #(
   assign tx_data_p[TX_JESD_L*TX_NUM_LINKS-1:0] = tx_data_p_loc[TX_JESD_L*TX_NUM_LINKS-1:0];
   assign tx_data_n[TX_JESD_L*TX_NUM_LINKS-1:0] = tx_data_n_loc[TX_JESD_L*TX_NUM_LINKS-1:0];
 
+  // Power up logic
+  // Delay power up with 10us
+  assign pwr_up = ~pwr_up_cnt[10];
+  always @(posedge sys_clk) begin
+    if (pwr_up_cnt[10]) begin
+      pwr_up_cnt <= pwr_up_cnt + 1;
+    end
+  end
 
 endmodule
 
