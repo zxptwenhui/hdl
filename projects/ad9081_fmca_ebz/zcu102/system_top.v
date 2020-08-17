@@ -105,7 +105,7 @@ module system_top  #(
 );
 
   // internal signals
-  reg [10:0] pwr_up_cnt = {1'b1,10'b0};
+  reg [26:0] pwr_up_cnt = {1'b1,26'b0};
 
   wire    [94:0]  gpio_i;
   wire    [94:0]  gpio_o;
@@ -329,10 +329,10 @@ module system_top  #(
   assign tx_data_n[TX_JESD_L*TX_NUM_LINKS-1:0] = tx_data_n_loc[TX_JESD_L*TX_NUM_LINKS-1:0];
 
   // Power up logic
-  // Delay power up with 10us
-  assign pwr_up = ~pwr_up_cnt[10];
+  // Delay power up with 1.3s
+  assign pwr_up = pwr_up_cnt[25];
   always @(posedge sys_clk) begin
-    if (pwr_up_cnt[10]) begin
+    if (pwr_up_cnt[26]) begin
       pwr_up_cnt <= pwr_up_cnt + 1;
     end
   end
