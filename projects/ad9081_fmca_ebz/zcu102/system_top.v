@@ -100,7 +100,24 @@ module system_top  #(
   output        pmod1_2_5_CSB5,
   output        pmod1_6_6_5V_CTRL,
   inout         pmod1_3_7_SDA,
-  output        pmod1_7_8_PWR_UP_DOWN
+  output        pmod1_7_8_PWR_UP_DOWN,
+  // FMC1 XM105 breakout board
+  output        fmc_bob_xud1_cs_n,
+  output        fmc_bob_xud1_txrx,
+  output        fmc_bob_xud1_mosi,
+  output        fmc_bob_xud1_if_state,
+  input         fmc_bob_xud1_miso,
+  output        fmc_bob_xud1_rx_amp_en,
+  output        fmc_bob_xud1_sclk,
+  output        fmc_bob_xud1_ctrl_pll,
+  output        fmc_bob_xud2_cs_n,
+  output        fmc_bob_xud2_txrx,
+  output        fmc_bob_xud2_mosi,
+  output        fmc_bob_xud2_if_state,
+  input         fmc_bob_xud2_miso,
+  output        fmc_bob_xud2_rx_amp_en,
+  output        fmc_bob_xud2_sclk,
+  output        fmc_bob_xud2_ctrl_pll
 
 );
 
@@ -144,6 +161,19 @@ module system_top  #(
   assign pmod1_5_4_CSB4 = spi_pmod_csn[4];
   assign pmod1_2_5_CSB5 = spi_pmod_csn[5];
   assign pmod0_3_7_SCLK = spi_pmod_clk;
+
+  assign fmc_bob_xud1_mosi = spi_pmod_mosi;
+  assign fmc_bob_xud1_cs_n = spi_pmod_csn[6];
+  assign fmc_bob_xud1_sclk = spi_pmod_clk;
+
+  assign fmc_bob_xud2_mosi = spi_pmod_mosi;
+  assign fmc_bob_xud2_cs_n = spi_pmod_csn[7];
+  assign fmc_bob_xud2_sclk = spi_pmod_clk;
+
+  assign spi_pmod_miso = ~&spi_pmod_csn[5:1] ? pmod0_2_5_MISO :
+                         ~spi_pmod_csn[6] ? fmc_bob_xud1_miso :
+                         ~spi_pmod_csn[7] ? fmc_bob_xud2_miso :
+                         1'b0;
 
   assign iic_rstn = 1'b1;
   // instantiations
@@ -246,6 +276,16 @@ module system_top  #(
   assign pmod1_6_6_5V_CTRL     = gpio_o[65];
   assign pmod1_7_8_PWR_UP_DOWN = pwr_up | gpio_o[66];
 
+  // XUD FMC BOB
+  assign fmc_bob_xud1_txrx = gpio_o[67];
+  assign fmc_bob_xud1_if_state = gpio_o[68];
+  assign fmc_bob_xud1_rx_amp_en = gpio_o[69];
+  assign fmc_bob_xud1_ctrl_pll = gpio_o[70];
+  assign fmc_bob_xud2_txrx = gpio_o[71];
+  assign fmc_bob_xud2_if_state = gpio_o[72];
+  assign fmc_bob_xud2_rx_amp_en = gpio_o[73];
+  assign fmc_bob_xud2_ctrl_pll = gpio_o[74];
+
   /* Board GPIOS. Buttons, LEDs, etc... */
   assign gpio_i[20: 8] = gpio_bd_i;
   assign gpio_bd_o = gpio_o[7:0];
@@ -317,7 +357,7 @@ module system_top  #(
     .spi_pmod_clk_o (spi_pmod_clk),
     .spi_pmod_csn_i (spi_pmod_csn),
     .spi_pmod_csn_o (spi_pmod_csn),
-    .spi_pmod_sdi_i (pmod0_2_5_MISO),
+    .spi_pmod_sdi_i (spi_pmod_miso),
     .spi_pmod_sdo_i (spi_pmod_mosi),
     .spi_pmod_sdo_o (spi_pmod_mosi)
   );
