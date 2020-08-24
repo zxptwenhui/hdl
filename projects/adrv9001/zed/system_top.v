@@ -111,7 +111,7 @@ module system_top (
 
   input                   rx1_dclk_out_n,
   input                   rx1_dclk_out_p,
-  inout                   rx1_enable,
+  output                  rx1_enable,
   input                   rx1_idata_out_n,
   input                   rx1_idata_out_p,
   input                   rx1_qdata_out_n,
@@ -121,7 +121,7 @@ module system_top (
 
   input                   rx2_dclk_out_n,
   input                   rx2_dclk_out_p,
-  inout                   rx2_enable,
+  output                  rx2_enable,
   input                   rx2_idata_out_n,
   input                   rx2_idata_out_p,
   input                   rx2_qdata_out_n,
@@ -133,7 +133,7 @@ module system_top (
   output                  tx1_dclk_in_p,
   input                   tx1_dclk_out_n,
   input                   tx1_dclk_out_p,
-  inout                   tx1_enable,
+  output                  tx1_enable,
   output                  tx1_idata_in_n,
   output                  tx1_idata_in_p,
   output                  tx1_qdata_in_n,
@@ -145,7 +145,7 @@ module system_top (
   output                  tx2_dclk_in_p,
   input                   tx2_dclk_out_n,
   input                   tx2_dclk_out_p,
-  inout                   tx2_enable,
+  output                  tx2_enable,
   output                  tx2_idata_in_n,
   output                  tx2_idata_in_p,
   output                  tx2_qdata_in_n,
@@ -165,6 +165,10 @@ module system_top (
   wire    [63:0]  gpio_i;
   wire    [63:0]  gpio_o;
   wire    [63:0]  gpio_t;
+  wire            gpio_rx1_enable_in;
+  wire            gpio_rx2_enable_in;
+  wire            gpio_tx1_enable_in;
+  wire            gpio_tx2_enable_in;
   wire    [ 1:0]  iic_mux_scl_i_s;
   wire    [ 1:0]  iic_mux_scl_o_s;
   wire            iic_mux_scl_t_s;
@@ -188,15 +192,11 @@ module system_top (
     .dio_o(gpio_i[31:0]),
     .dio_p(gpio_bd));
 
-  ad_iobuf #(.DATA_WIDTH(20)) i_iobuf (
-    .dio_t ({gpio_t[51:32]}),
-    .dio_i ({gpio_o[51:32]}),
-    .dio_o ({gpio_i[51:32]}),
-    .dio_p ({tx2_enable,  // 51
-             tx1_enable,  // 50
-             rx2_enable,  // 49
-             rx1_enable,  // 48
-             sm_fan_tach, // 47
+  ad_iobuf #(.DATA_WIDTH(16)) i_iobuf (
+    .dio_t ({gpio_t[47:32]}),
+    .dio_i ({gpio_o[47:32]}),
+    .dio_o ({gpio_i[47:32]}),
+    .dio_p ({sm_fan_tach, // 47
              reset_trx,   // 46
              mode,        // 45
              gp_int,      // 44
@@ -213,7 +213,12 @@ module system_top (
              dgpio_1,     // 33
              dgpio_0 })); // 32
 
-  assign gpio_i[63:52] = gpio_o[63:52];
+  assign gpio_rx1_enable_in = gpio_o[48];
+  assign gpio_rx2_enable_in = gpio_o[49];
+  assign gpio_tx1_enable_in = gpio_o[50];
+  assign gpio_tx2_enable_in = gpio_o[51];
+
+  assign gpio_i[63:48] = gpio_o[63:48];
 
    ad_iobuf #(.DATA_WIDTH(2)) i_iobuf_iic_scl (
     .dio_t ({iic_mux_scl_t_s,iic_mux_scl_t_s}),
@@ -317,6 +322,16 @@ module system_top (
     .tx2_qdata_out_p (tx2_qdata_in_p),
     .tx2_strobe_out_n (tx2_strobe_in_n),
     .tx2_strobe_out_p (tx2_strobe_in_p),
+
+    .rx1_enable (rx1_enable),
+    .rx2_enable (rx2_enable),
+    .tx1_enable (tx1_enable),
+    .tx2_enable (tx2_enable),
+
+    .gpio_rx1_enable_in (gpio_rx1_enable_in),
+    .gpio_rx2_enable_in (gpio_rx2_enable_in),
+    .gpio_tx1_enable_in (gpio_tx1_enable_in),
+    .gpio_tx2_enable_in (gpio_tx2_enable_in),
 
     .spi0_clk_i (1'b0),
     .spi0_clk_o (spi_clk),
