@@ -205,11 +205,26 @@ add_connection sys_clk.clk_reset sys_spi.reset
 add_interface sys_spi conduit end
 set_interface_property sys_spi EXPORT_OF sys_spi.external
 
+# spi for LTC2308
+
+add_instance ltc2308_spi altera_avalon_spi
+set_instance_parameter_value ltc2308_spi {clockPhase} {0}
+set_instance_parameter_value ltc2308_spi {clockPolarity} {1}
+set_instance_parameter_value ltc2308_spi {dataWidth} {8}
+set_instance_parameter_value ltc2308_spi {masterSPI} {1}
+set_instance_parameter_value ltc2308_spi {numberOfSlaves} {1}
+set_instance_parameter_value ltc2308_spi {targetClockRate} {50000000.0}
+add_connection sys_clk.clk ltc2308_spi.clk
+add_connection sys_clk.clk_reset ltc2308_spi.reset
+add_interface ltc2308_spi conduit end
+set_interface_property ltc2308_spi EXPORT_OF ltc2308_spi.external
+
 # interrupts
 
 ad_cpu_interrupt 0 sys_gpio_bd.irq
 ad_cpu_interrupt 1 sys_spi.irq
-ad_cpu_interrupt 2 sys_gpio_in.irq 
+ad_cpu_interrupt 2 sys_gpio_in.irq
+ad_cpu_interrupt 3 ltc2308_spi.irq
 
 # cpu interconnects
 
@@ -218,4 +233,5 @@ ad_cpu_interconnect 0x00010000 sys_id.control_slave
 ad_cpu_interconnect 0x00010080 sys_gpio_bd.s1
 ad_cpu_interconnect 0x00010100 sys_gpio_in.s1
 ad_cpu_interconnect 0x00109000 sys_gpio_out.s1
+ad_cpu_interconnect 0x0010A000 ltc2308_spi.spi_control_port
 
