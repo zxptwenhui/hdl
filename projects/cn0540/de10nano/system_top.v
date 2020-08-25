@@ -120,7 +120,13 @@ module system_top (
   output           cn0540_drdy_aux,
   output           cn0540_blue_led,
   output           cn0540_yellow_led,
-  input            cn0540_sync_in);
+  input            cn0540_sync_in,
+
+  output           ltc2308_cs,
+  output           ltc2308_sclk,
+  output           ltc2308_mosi,
+  input            ltc2308_miso
+);
 
   // internal signals
 
@@ -227,7 +233,15 @@ module system_top (
     .cn0540_spi_sdi_sdi (cn0540_spi_miso),
     .cn0540_spi_cs_cs (cn0540_spi_cs),
     .cn0540_spi_sclk_clk (cn0540_spi_sclk),
-    .cn0540_spi_trigger_trigger (cn0540_drdy));
+    .cn0540_spi_trigger_trigger (cn0540_drdy),
+    .sys_spi_MISO (1'b0),
+    .sys_spi_MOSI (),
+    .sys_spi_SCLK (),
+    .sys_spi_SS_n (),
+    .ltc2308_spi_MISO (ltc2308_miso),
+    .ltc2308_spi_MOSI (ltc2308_mosi),
+    .ltc2308_spi_SCLK (ltc2308_sclk),
+    .ltc2308_spi_SS_n (ltc2308_cs));
 
 endmodule
 

@@ -8,7 +8,7 @@ source $ad_hdl_dir/projects/common/de10nano/de10nano_system_assign.tcl
 
 # files
 
-# SPI interface
+# SPI interface for ad7768-1
 
 set_location_assignment PIN_AH12 -to cn0540_spi_sclk      ; ##   Arduino_IO13
 set_location_assignment PIN_AH11 -to cn0540_spi_miso      ; ##   Arduino_IO12
