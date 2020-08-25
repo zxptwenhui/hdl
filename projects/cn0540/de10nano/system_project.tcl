@@ -8,7 +8,7 @@ source $ad_hdl_dir/projects/common/de10nano/de10nano_system_assign.tcl
 
 # files
 
-# SPI interface
+# SPI interface for ad7768-1
 
 set_location_assignment PIN_AH12 -to cn0540_spi_sclk      ; ##   Arduino_IO13
 set_location_assignment PIN_AH11 -to cn0540_spi_miso      ; ##   Arduino_IO12
@@ -19,6 +19,18 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to cn0540_spi_sclk
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to cn0540_spi_miso
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to cn0540_spi_mosi
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to cn0540_spi_cs
+
+# SPI interface for ltc2308
+
+set_location_assignment PIN_V10  -to ltc2308_spi_sclk
+set_location_assignment PIN_AD4  -to ltc2308_spi_miso
+set_location_assignment PIN_AC4  -to ltc2308_spi_mosi
+set_location_assignment PIN_U9   -to ltc2308_spi_cs
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc2308_spi_sclk
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc2308_spi_miso
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc2308_spi_mosi
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc2308_spi_cs
 
 # I2C
 

@@ -108,6 +108,6 @@ ad_cpu_interconnect 0x00030000 axi_spi_engine_0.s_axi
 
 #interrupts
 
-ad_cpu_interrupt 3 axi_dmac_0.interrupt_sender
-ad_cpu_interrupt 4 axi_spi_engine_0.interrupt_sender
+ad_cpu_interrupt 4 axi_dmac_0.interrupt_sender
+ad_cpu_interrupt 5 axi_spi_engine_0.interrupt_sender
 
