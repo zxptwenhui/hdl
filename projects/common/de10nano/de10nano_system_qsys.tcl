@@ -39,9 +39,9 @@ set_instance_parameter_value sys_hps {I2C0_PinMuxing} {FPGA}
 set_instance_parameter_value sys_hps {I2C0_Mode} {Full}
 set_instance_parameter_value sys_hps {desired_cfg_clk_mhz} {80.0}
 set_instance_parameter_value sys_hps {S2FCLK_USER0CLK_Enable} {1}
-set_instance_parameter_value sys_hps {S2FCLK_USER1CLK_Enable} {0}
-set_instance_parameter_value sys_hps {S2FCLK_USER1CLK_FREQ} {100.0}
-set_instance_parameter_value sys_hps {S2FCLK_USER2CLK_FREQ} {100.0}
+set_instance_parameter_value sys_hps {S2FCLK_USER1CLK_Enable} {1}
+set_instance_parameter_value sys_hps {S2FCLK_USER0CLK_FREQ} {80.0}
+set_instance_parameter_value sys_hps {S2FCLK_USER1CLK_FREQ} {20.0}
 set_instance_parameter_value sys_hps {HPS_PROTOCOL} {DDR3}
 set_instance_parameter_value sys_hps {MEM_CLK_FREQ} {400.0}
 set_instance_parameter_value sys_hps {REF_CLK_FREQ} {25.0}
@@ -138,6 +138,12 @@ add_connection sys_clk.clk sys_dma_clk.clk_in
 add_connection sys_clk.clk_reset sys_dma_clk.clk_in_reset
 add_connection sys_dma_clk.clk sys_hps.f2h_sdram1_clock
 add_connection sys_dma_clk.clk sys_hps.f2h_sdram2_clock
+
+# io delay configuration clock
+
+add_instance sys_iodelay_clk clock_source
+add_connection sys_hps.h2f_user1_clock sys_iodelay_clk.clk_in
+add_connection sys_clk.clk_reset sys_iodelay_clk.clk_in_reset
 
 # internal memory
 
