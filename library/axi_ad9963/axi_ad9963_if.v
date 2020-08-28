@@ -138,6 +138,16 @@ module axi_ad9963_if #(
     end
   end
 
+  my_ila i_ila (
+    .clk(dac_clk),
+    .probe0(tx_data_p),
+    .probe1(constant_sample[23: 12]),
+    .probe2(constant_sample[11: 0]),
+    .probe3(dac_data[11: 0]),
+    .probe4(dac_data[23:12]),
+    .probe5(out_valid_q),
+    .probe6(out_valid_i));
+
   always @(posedge adc_clk) begin
     if (adc_rst == 1'b1) begin
       adc_status <= 1'b0;
