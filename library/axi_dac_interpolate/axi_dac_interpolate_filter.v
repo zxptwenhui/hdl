@@ -129,6 +129,20 @@ module axi_dac_interpolate_filter #(
     .filter_out (dac_cic_data),
     .ce_out (dac_cic_valid));
 
+  //int_ila i_ila (
+  //  .clk(dac_clk),
+  //  .probe0(dac_data),
+  //  .probe1(dac_data_corrected),
+  //  .probe2(dac_cic_data[31:16]),
+  //  .probe3(dma_valid),
+  //  .probe4(dma_valid_adjacent),
+  //  .probe5(dma_transfer_suspend),
+  //  .probe6(dac_int_data),
+  //  .probe7(filter_mask),
+  //  .probe8(4'd0),
+  //  .probe9(dac_valid_out)
+  //);
+
   assign dma_valid_ch_sync = sync_stop_channels ?
                              dma_valid & dma_valid_adjacent & !dma_transfer_suspend :
                              dma_valid & !dma_transfer_suspend;
