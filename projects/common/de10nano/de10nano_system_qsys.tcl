@@ -131,10 +131,10 @@ proc ad_dma_interconnect {m_port m_id} {
   set_connection_parameter_value ${m_port}/sys_hps.f2h_sdram2_data baseAddress {0x0000}
 }
 
-# common dma interfaces
+# common dma interfaces clock
 
 add_instance sys_dma_clk clock_source
-add_connection sys_clk.clk sys_dma_clk.clk_in
+add_connection sys_hps.h2f_user0_clock sys_dma_clk.clk_in
 add_connection sys_clk.clk_reset sys_dma_clk.clk_in_reset
 add_connection sys_dma_clk.clk sys_hps.f2h_sdram1_clock
 add_connection sys_dma_clk.clk sys_hps.f2h_sdram2_clock
