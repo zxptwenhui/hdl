@@ -22,6 +22,7 @@ set_instance_parameter_value axi_spi_engine_0 {NUM_OFFLOAD}   {1}
 add_instance spi_engine_execution_0 spi_engine_execution
 set_instance_parameter_value spi_engine_execution_0 {DATA_WIDTH} {32}
 set_instance_parameter_value spi_engine_execution_0 {NUM_OF_SDI} {1}
+set_instance_parameter_value spi_engine_execution_0 {SDI_DELAY} {0}
 set_instance_parameter_value spi_engine_execution_0 {MISO_DELAY} {1}
 
 # spi_engine_interconnect
