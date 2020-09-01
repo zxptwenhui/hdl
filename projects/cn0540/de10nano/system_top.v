@@ -137,7 +137,14 @@ module system_top (
   output           ltc2308_cs,
   output           ltc2308_sclk,
   output           ltc2308_mosi,
-  input            ltc2308_miso
+  input            ltc2308_miso,
+
+  // Debug
+  output           dbg_ltc2308_cs,
+  output           dbg_ltc2308_sclk,
+  output           dbg_ltc2308_mosi,
+  output           dbg_ltc2308_miso
+
 );
 
   // internal signals
@@ -155,6 +162,13 @@ module system_top (
   wire             i2c0_sda;
   wire             i2c0_out_clk;
   wire             i2c0_scl_in_clk;
+
+  // Debug
+
+  assign dbg_ltc2308_cs = ltc2308_cs;
+  assign dbg_ltc2308_sclk = ltc2308_sclk;
+  assign dbg_ltc2308_mosi = ltc2308_mosi;
+  assign dbg_ltc2308_miso = ltc2308_miso;
 
   // instantiations
 
