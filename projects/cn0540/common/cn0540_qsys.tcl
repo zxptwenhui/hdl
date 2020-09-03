@@ -11,7 +11,7 @@ set_instance_parameter_value axi_dmac_0 {DMA_DATA_WIDTH_DEST} {64}
 # axi_spi_engine
 
 add_instance axi_spi_engine_0 axi_spi_engine
-set_instance_parameter_value axi_spi_engine_0 {ASYNC_SPI_CLK} {1}
+set_instance_parameter_value axi_spi_engine_0 {ASYNC_SPI_CLK} {0}
 set_instance_parameter_value axi_spi_engine_0 {DATA_WIDTH}    {32}
 set_instance_parameter_value axi_spi_engine_0 {MM_IF_TYPE}    {0}
 set_instance_parameter_value axi_spi_engine_0 {NUM_OF_SDI}    {1}
@@ -35,7 +35,7 @@ set_instance_parameter_value spi_engine_interconnect_0 {NUM_OF_SDI} {1}
 
 add_instance spi_engine_offload_0 spi_engine_offload
 set_instance_parameter_value spi_engine_offload_0 {ASYNC_TRIG}    {1}
-set_instance_parameter_value spi_engine_offload_0 {ASYNC_SPI_CLK} {1}
+set_instance_parameter_value spi_engine_offload_0 {ASYNC_SPI_CLK} {0}
 set_instance_parameter_value spi_engine_offload_0 {DATA_WIDTH}    {32}
 set_instance_parameter_value spi_engine_offload_0 {NUM_OF_SDI}    {1}
 
@@ -58,13 +58,13 @@ set_interface_property cn0540_spi_trigger EXPORT_OF spi_engine_offload_0.if_trig
 add_connection sys_clk.clk axi_spi_engine_0.s_axi_clock
 add_connection sys_clk.clk axi_dmac_0.s_axi_clock
 
-add_connection sys_dma_clk.clk spi_engine_execution_0.if_clk
-add_connection sys_dma_clk.clk spi_engine_interconnect_0.if_clk
-add_connection sys_dma_clk.clk axi_spi_engine_0.if_spi_clk
-add_connection sys_dma_clk.clk spi_engine_offload_0.if_ctrl_clk
-add_connection sys_dma_clk.clk spi_engine_offload_0.if_spi_clk
-add_connection sys_dma_clk.clk axi_dmac_0.if_s_axis_aclk
-add_connection sys_dma_clk.clk axi_dmac_0.m_dest_axi_clock
+add_connection sys_clk.clk spi_engine_execution_0.if_clk
+add_connection sys_clk.clk spi_engine_interconnect_0.if_clk
+add_connection sys_clk.clk axi_spi_engine_0.if_spi_clk
+add_connection sys_clk.clk spi_engine_offload_0.if_ctrl_clk
+add_connection sys_clk.clk spi_engine_offload_0.if_spi_clk
+add_connection sys_clk.clk axi_dmac_0.if_s_axis_aclk
+add_connection sys_clk.clk axi_dmac_0.m_dest_axi_clock
 
 add_connection sys_iodelay_clk.clk spi_engine_execution_0.if_io_config_clk
 
@@ -77,7 +77,7 @@ add_connection axi_spi_engine_0.if_spi_resetn spi_engine_execution_0.if_resetn
 add_connection axi_spi_engine_0.if_spi_resetn spi_engine_interconnect_0.if_resetn
 add_connection axi_spi_engine_0.if_spi_resetn spi_engine_offload_0.if_spi_resetn
 
-add_connection sys_dma_clk.clk_reset axi_dmac_0.m_dest_axi_reset
+add_connection sys_clk.clk_reset axi_dmac_0.m_dest_axi_reset
 
 # interfaces
 
